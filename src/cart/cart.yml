@@ -1,0 +1,98 @@
+get:
+  summary: Ritorna il carrello
+  description: Ritorna i prodotti e i dettagli contabili del carrello utente
+  operationId: getCart
+  tags:
+    - cart
+  parameters:
+    - in: header
+      name: Authorization
+      description: token JWT
+      schema:
+        type: string
+      required: false
+    - in: header
+      name: guestToken
+      schema:
+        type: string
+      required: false
+  responses:
+    200:
+      description: il carrello è stato ritornato
+      content:
+        application/json:
+          schema:
+            $ref: "schema.json#/responseCart"
+          example:
+            {
+              status: "success",
+              data:
+                {
+                  id: "1",
+                  products:
+                    [
+                      {
+                        id: "152",
+                        name: ball,
+                        primaryPhoto: /image.jpg,
+                        price: 5.95,
+                        quantity: 10,
+                      },
+                    ],
+                  total: 59.5,
+                  tax: 10.73,
+                },
+            }
+    400:
+      description: carrello non trovato
+      content:
+        application/json:
+          schema:
+            $ref: "../utils/schema.json#/response"
+          example: { status: "error", message: "carrello non trovato" }
+
+post:
+  summary: Aggiunta prodotto al carrello
+  description: Riceve id prodotto e quantità, se disponibile inserisce nel carrello
+  operationId: addToCart
+  tags:
+    - cart
+  parameters:
+    - in: header
+      name: Authorization
+      description: token JWT
+      schema:
+        type: string
+      required: false
+    - in: header
+      name: guestToken
+      schema:
+        type: string
+      required: false
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: "schema.json#/insertCartProduct"
+        example: { id: "123VF", quantity: 3 }
+  responses:
+    200:
+      description: "articolo aggiunto al carrello"
+      content:
+        application/json:
+          schema:
+            $ref: "../utils/schema.json#/response"
+          example:
+            { status: "success", message: "articolo rimosso con successo" }
+    400:
+      description: "articolo non aggiunto al carrello"
+      content:
+        application/json:
+          schema:
+            $ref: "../utils/schema.json#/response"
+          example:
+            {
+              status: "error",
+              message: "l'articolo non era presente nella quantità richiesta",
+            }

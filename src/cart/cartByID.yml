@@ -1,0 +1,44 @@
+delete: 
+  summary: Rimozione prodotto
+  description: Rimuove il prodotto dal carrello con l'id passato come parametro
+  operationId: removeFromCart
+  tags:
+    - cart
+  parameters:
+    - in: header
+      name: Authorization
+      description: token JWT
+      schema:
+        type: string
+      required: false
+    - in: header
+      name: guestToken
+      schema:
+        type: string
+      required: false
+    - in: path
+      name: id
+      description: id del prodotto da eliminare
+      schema:
+        type: string
+      required: true
+  responses:
+    200:
+      description: "articolo rimosso dal carrello"
+      content:
+        application/json:
+          schema:
+            $ref: "../utils/schema.json#/response"
+          example:
+            { status: "success", message: "articolo rimosso con successo" }
+    400:
+      description: "l'articolo non era presente nel carrello"
+      content:
+        application/json:
+          schema:
+            $ref: "../utils/schema.json#/response"
+          example:
+            {
+              status: "error",
+              message: "l'articolo non era presente nel carrello",
+            }

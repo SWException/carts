@@ -1,0 +1,79 @@
+service: carts
+
+frameworkVersion: "2"
+# variablesResolutionMode: 20210219
+
+useDotenv: true
+
+plugins:
+  - serverless-webpack
+  - serverless-dynamodb-local
+  - serverless-offline-dotenv
+  - serverless-offline
+
+custom:
+  webpack:
+    webpackConfig: "./webpack.config.js"
+    includeModules:
+      forceExclude:
+        - aws-sdk
+    packager: "npm"
+  serverless-offline:
+    httpPort: 4000
+    ignoreJWTSignature: true
+
+provider:
+  name: aws
+  region: eu-central-1
+  # profile: swexception
+  runtime: nodejs12.x
+  lambdaHashingVersion: "20201221"
+  stage: ${opt:stage, 'dev'}
+
+  apiGateway:
+    restApiId: 95kq9eggu9
+    restApiRootResourceId: zsd84g8moe
+
+  environment:
+    AWS_NODEJS_CONNECTION_REUSE_ENABLED: "1"
+    REGION: ${self:provider.region}
+
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - dynamodb:*
+            - s3:*
+          Resource: "*"
+
+functions:
+  getCart:
+    handler: "src/cart/getCart.HANDLER"
+    events:
+      - http:
+          path: /cart
+          method: GET
+          cors: true
+  postCart:
+    handler: "src/cart/postCart.HANDLER"
+    events:
+      - http:
+          path: /cart
+          method: POST
+          cors: true   
+
+resources:
+  Resources:
+    #dynamodb tables
+    CartsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: carts
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: "S"
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
