@@ -1,0 +1,18 @@
+openapi: 3.0.3
+info:
+  title: EmporioLambda BE
+  description: Queste sono le OpenAPI per il microservizio designato alla gestione dei carrelli degli utenti
+  version: 0.1.0
+
+servers:
+# Added by API Auto Mocking Plugin
+- description: SwaggerHub API Auto Mocking
+  url: https://virtserver.swaggerhub.com/swexception4/OpenAPI/0.1.0/cart
+- description: serverless offline
+  url: http://localhost:4000/dev/cart
+
+paths:
+  /cart/:
+    $ref: "cart.yml"
+  /cart/product/{id}:
+    $ref: "cartByID.yml"

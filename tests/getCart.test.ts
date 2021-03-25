@@ -1,4 +1,4 @@
-import { HANDLER } from "src/cart/getCart"
+import { HANDLER } from "src/getCart"
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda"
 import { mock } from 'jest-mock-extended';
 import { matchersWithOptions } from 'jest-json-schema';

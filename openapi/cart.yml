@@ -22,7 +22,7 @@ get:
       content:
         application/json:
           schema:
-            $ref: "schema.json#/responseCart"
+            $ref: "../schemas/carts.json#/responseCart"
           example:
             {
               status: "success",
@@ -48,13 +48,13 @@ get:
       content:
         application/json:
           schema:
-            $ref: "../utils/schema.json#/response"
+            $ref: "../schemas/response.json#/response"
           example: { status: "error", message: "carrello non trovato" }
 
-post:
-  summary: Aggiunta prodotto al carrello
-  description: Riceve id prodotto e quantità, se disponibile inserisce nel carrello
-  operationId: addToCart
+delete:
+  summary: Elimina il carrello
+  description: Elimina i prodotti e i dettagli contabili del carrello utente
+  operationId: deleteCart
   tags:
     - cart
   parameters:
@@ -69,30 +69,20 @@ post:
       schema:
         type: string
       required: false
-  requestBody:
-    required: true
-    content:
-      application/json:
-        schema:
-          $ref: "schema.json#/insertCartProduct"
-        example: { id: "123VF", quantity: 3 }
   responses:
     200:
-      description: "articolo aggiunto al carrello"
+      description: il carrello è stato eliminato
       content:
         application/json:
           schema:
-            $ref: "../utils/schema.json#/response"
+            $ref: "../schemas/response.json#/response"
           example:
-            { status: "success", message: "articolo rimosso con successo" }
+            { status: "success", message: "carrello eliminato" }
     400:
-      description: "articolo non aggiunto al carrello"
+      description: carrello non trovato
       content:
         application/json:
           schema:
-            $ref: "../utils/schema.json#/response"
-          example:
-            {
-              status: "error",
-              message: "l'articolo non era presente nella quantità richiesta",
-            }
+            $ref: "../schemas/response.json#/response"
+          example: { status: "error", message: "impossibile eliminare il carrello di questo utente" }
+
