@@ -1,6 +1,6 @@
 get:
-  summary: Ritorna il carrello
-  description: Ritorna i prodotti e i dettagli contabili del carrello utente
+  summary: Get the cart
+  description: Get products and accounting details of the current cart
   operationId: getCart
   tags:
     - cart
@@ -18,7 +18,7 @@ get:
       required: false
   responses:
     200:
-      description: il carrello è stato ritornato
+      description: cart returned
       content:
         application/json:
           schema:
@@ -44,7 +44,7 @@ get:
                 },
             }
     400:
-      description: carrello non trovato
+      description: cart didn't found
       content:
         application/json:
           schema:
@@ -52,8 +52,8 @@ get:
           example: { status: "error", message: "carrello non trovato" }
 
 delete:
-  summary: Elimina il carrello
-  description: Elimina i prodotti e i dettagli contabili del carrello utente
+  summary: Delete the cart
+  description: Empty the cart associated with the user authenticated
   operationId: deleteCart
   tags:
     - cart
@@ -71,7 +71,7 @@ delete:
       required: false
   responses:
     200:
-      description: il carrello è stato eliminato
+      description: cart was deleted
       content:
         application/json:
           schema:
@@ -79,7 +79,7 @@ delete:
           example:
             { status: "success", message: "carrello eliminato" }
     400:
-      description: carrello non trovato
+      description: cart didn't found
       content:
         application/json:
           schema:
