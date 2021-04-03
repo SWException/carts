@@ -70,7 +70,7 @@ functions:
           method: POST
           cors: true
   removeFromCart:
-    handler: "src/handler/removeFromCart.HANDLER"
+    handler: "src/handlers/removeFromCart.HANDLER"
     events:
       - http:
           path: /cart/{id}
