@@ -1,4 +1,4 @@
-import { Cart } from "../cart";
+import { Cart } from "../core/cart";
 
 export interface Persistence {
     getCart (id: string): Cart;

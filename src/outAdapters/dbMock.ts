@@ -1,5 +1,5 @@
 import { Cart } from "src/core/cart";
-import { Persistence } from "../core/outPorts/persistence";
+import { Persistence } from "./persistence";
 
 export class DbMock implements Persistence {
 
@@ -9,16 +9,16 @@ export class DbMock implements Persistence {
         ["ccc", 1]
     ])
 
-    getCart(id: string): Cart {
+    getCart (id: string): Cart {
         return new Cart("user123", DbMock.CART_FAKE);
     }
-    deleteCart(id: string): boolean {
+    deleteCart (id: string): boolean {
         return true;
     }
-    addToCart(cartId: string, productId: string, quantity: number): boolean {
+    addToCart (cartId: string, productId: string, quantity: number): boolean {
         return true;
     }
-    removeFromCart(cartId: string, productId: string): boolean {
+    removeFromCart (cartId: string, productId: string): boolean {
         return true;
     }
     

@@ -23,13 +23,12 @@ post:
       schema:
         type: string
       required: true
-  requestBody:
-    required: true
-    content:
-      application/json:
-        schema:
-          $ref: "../schemas/carts.json#/insertCartProduct"
-        example: { id: "123VF", quantity: 3 }
+    - in: header
+      name: quantity
+      description: quantity of the item
+      schema:
+        type: number
+      required: true
   responses:
     200:
       description: "product added to cart"

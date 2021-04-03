@@ -6,4 +6,8 @@ export class Cart {
         this.id = id;
         this.products = products;
     }
+
+    public getProducts (): Map<string, number> {
+        return this.products;
+    }
 }

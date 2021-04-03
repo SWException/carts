@@ -1,7 +1,7 @@
-import { Products } from "../core/outPorts/products";
+import { Products } from "./products";
 
 export class ProductsService implements Products{
-    getProductInfo(): JSON {
+    getProductInfo (id: string): JSON {
         // TO-DO chiamata a microservizio products
         return null;
     }

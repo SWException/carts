@@ -1,4 +1,4 @@
-import { Products } from "../core/outPorts/products";
+import { Products } from "./products";
 
 export class ProductsMock implements Products {
     private static readonly PRODUCT = {
@@ -14,7 +14,7 @@ export class ProductsMock implements Products {
         stock: 100
     };
 
-    getProductInfo(): JSON {
+    getProductInfo (id: string): JSON {
         return JSON.parse(JSON.stringify(ProductsMock.PRODUCT));
     }
 
