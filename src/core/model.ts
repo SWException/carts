@@ -32,17 +32,24 @@ export class Model {
         const CART: Cart = this.persistence.getCart(id);
         const PRODUCTS: Map<string, number> = CART.getProducts();
         const OBJ = {};
-        let i = 0;
+        let i = 0, total = 0, taxes = 0;
         PRODUCTS.forEach((quantity, productId) => {
             const PRODUCT = this.productsService.getProductInfo(productId);
-            OBJ[i++] = {
+            const TAX = PRODUCT["price"]*PRODUCT["tax"]/100;
+            const PRICE = PRODUCT["price"] + TAX;
+            total += PRICE;
+            taxes += TAX;
+            OBJ["products"][i++] = {
                 "id": productId,
                 "name": PRODUCT["name"],
                 "primaryPhoto": PRODUCT["images"][0],
-                "price": 0,
+                "price": PRICE,
                 "quantity": quantity
             };
         });
+        OBJ["total"] = total;
+        OBJ["tax"] = taxes;
+        OBJ["id"] = id;
         return JSON.parse(JSON.stringify(OBJ));
     }
     deleteCart (id: string): boolean {
