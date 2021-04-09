@@ -1,55 +1,3 @@
-#api per aggiungere e rimuovere un prodotto dal carrello
-post:
-  summary: Add a product to cart
-  description: Receive a product ID and a quantity, iff se quantity is available in stock the operation is successful
-  operationId: addToCart
-  tags:
-    - cart
-  parameters:
-    - in: header
-      name: Authorization
-      description: token JWT
-      schema:
-        type: string
-      required: false
-    - in: header
-      name: guestToken
-      schema:
-        type: string
-      required: false
-    - in: path
-      name: id
-      description: product id
-      schema:
-        type: string
-      required: true
-    - in: header
-      name: quantity
-      description: quantity of the item
-      schema:
-        type: number
-      required: true
-  responses:
-    200:
-      description: "product added to cart"
-      content:
-        application/json:
-          schema:
-            $ref: "../schemas/response.json#/response"
-          example:
-            { status: "success", message: "articolo aggiunto al carrello" }
-    400:
-      description: product not added to cart"
-      content:
-        application/json:
-          schema:
-            $ref: "../schemas/response.json#/response"
-          example:
-            {
-              status: "error",
-              message: "errore o l'articolo non era presente nella quantità richiesta",
-            }
-
 delete: 
   summary: Remove the product
   description: Remove the product with the specified ID from the cart
@@ -94,3 +42,54 @@ delete:
               status: "error",
               message: "l'articolo non era presente nel carrello",
             }
+
+patch:
+  summary: Modify product in the cart
+  description: Change the quantity of the product in the cart
+  operationId: changeQuantity
+  tags:
+    - cart
+  parameters:
+    - in: header
+      name: Authorization
+      description: token JWT
+      schema:
+        type: string
+      required: false
+    - in: header
+      name: guestToken
+      schema:
+        type: string
+      required: false
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: "../schemas/carts.json#/insertCartProduct"
+        example:
+          {
+            productId: "1234",
+            quantity: 2
+          }
+  responses:
+    200:
+      description: "quantity modified"
+      content:
+        application/json:
+          schema:
+            $ref: "../schemas/response.json#/response"
+          example:
+            { status: "success", message: "quantity modified" }
+    400:
+      description: "request error"
+      content:
+        application/json:
+          schema:
+            $ref: "../schemas/response.json#/response"
+          example:
+            {
+              status: "error",
+              message: "request error",
+            }
+  

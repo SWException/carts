@@ -86,3 +86,53 @@ delete:
             $ref: "../schemas/response.json#/response"
           example: { status: "error", message: "impossibile eliminare il carrello di questo utente" }
 
+#api per aggiungere e rimuovere un prodotto dal carrello
+post:
+  summary: Add a product to cart
+  description: Receive a product ID and a quantity, iff se quantity is available in stock the operation is successful
+  operationId: addToCart
+  tags:
+    - cart
+  parameters:
+    - in: header
+      name: Authorization
+      description: token JWT
+      schema:
+        type: string
+      required: false
+    - in: header
+      name: guestToken
+      schema:
+        type: string
+      required: false
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: "../schemas/carts.json#/insertCartProduct"
+        example:
+          {
+            productId: "1234",
+            quantity: 2
+          }
+  responses:
+    200:
+      description: "product added to cart"
+      content:
+        application/json:
+          schema:
+            $ref: "../schemas/response.json#/response"
+          example:
+            { status: "success", message: "articolo aggiunto al carrello" }
+    400:
+      description: product not added to cart"
+      content:
+        application/json:
+          schema:
+            $ref: "../schemas/response.json#/response"
+          example:
+            {
+              status: "error",
+              message: "errore o l'articolo non era presente nella quantità richiesta",
+            }
