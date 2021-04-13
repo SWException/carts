@@ -1,35 +1,37 @@
-import { Persistence } from "../outAdapters/persistence";
-import { Products } from "../outAdapters/products";
-import { Dynamo } from "../outAdapters/dynamo";
-import { DbMock } from "../outAdapters/dbMock";
-import { ProductsMock } from "../outAdapters/productsMock";
-import { ProductsService } from "../outAdapters/productsService";
+import { Persistence } from "../repository/persistence";
+import { Products } from "../repository/products";
+import { Users } from "../repository/users";
+import { Dynamo } from "../repository/dynamo";
+import { DbMock } from "../repository/dbMock";
+import { ProductsMock } from "../repository/productsMock";
+import { ProductsService } from "../repository/productsService";
+import { UsersService } from "../repository/usersService";
+import { UsersMock } from "../repository/usersMock";
 import { Cart } from "./cart";
 
 export class Model {
     private readonly persistence: Persistence;
     private readonly productsService: Products;
+    private readonly usersService: Users;
 
-    private constructor (persistence: Persistence, productsService: Products) {
+    private constructor (persistence: Persistence, productsService: Products, usersService: Users) {
         this.persistence = persistence;
         this.productsService = productsService;
+        this.usersService = usersService;
     }
 
     public static createModel (): Model {
-        return new Model(new Dynamo(), new ProductsService());
+        return new Model(new Dynamo(), new ProductsService(), new UsersService());
     }
-    public static createModelPersistenceMock (): Model {
-        return new Model(new DbMock(), new ProductsService());
-    }
-    public static createModelProductsMock (): Model {
-        return new Model(new Dynamo(), new ProductsMock());
-    }
-    public static createModelProductsAndPersistenceMock (): Model {
-        return new Model(new DbMock(), new ProductsMock());
+    public static createModelTest (): Model {
+        return new Model(new DbMock(), new ProductsMock(), new UsersMock());
     }
 
-    getCart (id: string): JSON{
-        const CART: Cart = this.persistence.getCart(id);
+    public async getCart (token: string): Promise<JSON>{
+        const ID: string = await this.tokenToID(token);
+        if(ID == null)
+            return null;
+        const CART: Cart = this.persistence.getCart(ID);
         const PRODUCTS: Map<string, number> = CART.getProducts();
         const OBJ = {};
         let i = 0, total = 0, taxes = 0;
@@ -49,17 +51,30 @@ export class Model {
         });
         OBJ["total"] = total;
         OBJ["tax"] = taxes;
-        OBJ["id"] = id;
+        OBJ["id"] = ID;
         return JSON.parse(JSON.stringify(OBJ));
     }
-    deleteCart (id: string): boolean {
-        return this.persistence.deleteCart(id);
+    public async deleteCart (token: string): Promise<boolean> {
+        const ID: string = await this.tokenToID(token);
+        if(ID == null)
+            return false;
+        return this.persistence.deleteCart(ID);
     }
-    addToCart (cartId: string, productId: string, quantity: number): boolean {
-        return this.persistence.addToCart(cartId, productId, quantity);
+    public async addToCart (token: string, productId: string, quantity: number): Promise<boolean> {
+        const CART_ID: string = await this.tokenToID(token);
+        if(CART_ID == null)
+            return false;
+        return this.persistence.addToCart(CART_ID, productId, quantity);
     }
-    removeFromCart (cartId: string, productId: string): boolean {
-        return this.persistence.removeFromCart(cartId, productId);
+    public async removeFromCart (token: string, productId: string): Promise<boolean> {
+        const CART_ID: string = await this.tokenToID(token);
+        if(CART_ID == null)
+            return false;
+        return this.persistence.removeFromCart(CART_ID, productId);
+    }
+
+    private async tokenToID (token: string): Promise<string>{
+        return await this.usersService.getUsername(token);
     }
 
 }
