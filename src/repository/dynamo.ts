@@ -2,21 +2,26 @@ import { Cart } from "src/core/cart";
 import { Persistence } from "./persistence";
 
 export class Dynamo implements Persistence {
-    getCart (id: string): Cart {
+    public async getCart (id: string): Promise<Cart> {
         // TO-DO Marco
-        return null;
+        throw new Error("not implemented");
     }
-    deleteCart (id: string): boolean {
+    public async deleteCart (id: string): Promise<boolean> {
         // TO-DO Marco
-        return false;
+        throw new Error("not implemented");
     }
-    addToCart (cartId: string, productId: string, quantity: number): boolean {
+    public async addToCart (cartId: string, productId: string, quantity: number): Promise<boolean> {
         // TO-DO Marco
-        return false;
+        throw new Error("not implemented");
     }
-    removeFromCart (cartId: string, productId: string): boolean {
+    public async removeFromCart (cartId: string, productId: string): Promise<boolean> {
         // TO-DO Marco
-        return false;
+        throw new Error("not implemented");
+    }
+
+    public async getProductQuantity (cartId: string, productId: string): Promise<number> {
+        // TO-DO Marco
+        throw new Error("not implemented");
     }
 
 }

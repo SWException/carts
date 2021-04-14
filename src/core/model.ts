@@ -31,7 +31,7 @@ export class Model {
         const ID: string = await this.tokenToID(token);
         if(ID == null)
             return null;
-        const CART: Cart = this.persistence.getCart(ID);
+        const CART: Cart = await this.persistence.getCart(ID);
         const PRODUCTS: Map<string, number> = CART.getProducts();
         const OBJ = {};
         let i = 0, total = 0, taxes = 0;
@@ -54,18 +54,22 @@ export class Model {
         OBJ["id"] = ID;
         return JSON.parse(JSON.stringify(OBJ));
     }
+    
     public async deleteCart (token: string): Promise<boolean> {
         const ID: string = await this.tokenToID(token);
         if(ID == null)
             return false;
         return this.persistence.deleteCart(ID);
     }
+
     public async addToCart (token: string, productId: string, quantity: number): Promise<boolean> {
         const CART_ID: string = await this.tokenToID(token);
         if(CART_ID == null)
             return false;
-        return this.persistence.addToCart(CART_ID, productId, quantity);
+        const QUANTITY_OLD: number = await this.persistence.getProductQuantity(CART_ID, productId);
+        return this.persistence.addToCart(CART_ID, productId, quantity + QUANTITY_OLD);
     }
+
     public async removeFromCart (token: string, productId: string): Promise<boolean> {
         const CART_ID: string = await this.tokenToID(token);
         if(CART_ID == null)
