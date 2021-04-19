@@ -15,10 +15,7 @@ export class DbMock implements Persistence {
     public async deleteCart (id: string): Promise<boolean> {
         return true;
     }
-    public async addToCart (cartId: string, productId: string, quantity: number): Promise<boolean> {
-        return true;
-    }
-    public async removeFromCart (cartId: string, productId: string): Promise<boolean> {
+    public async updateCart (cart: Cart): Promise<boolean> {
         return true;
     }
     
