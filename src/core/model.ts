@@ -20,6 +20,14 @@ export class Model {
         this.usersService = usersService;
     }
 
+    private async getCartFromPersistence (token: string): Promise<Cart>{
+        const ID: string = await this.tokenToID(token);
+        if(ID == null)
+            return null;
+        const CART: Cart = await this.persistence.getItem(ID);
+        return CART;
+    }
+
     public static createModel (): Model {
         return new Model(new Dynamo(), new ProductsService(), new UsersService());
     }
@@ -27,11 +35,10 @@ export class Model {
         return new Model(new DbMock(), new ProductsMock(), new UsersMock());
     }
 
-    public async getCart (token: string): Promise<JSON>{
-        const ID: string = await this.tokenToID(token);
-        if(ID == null)
+    public async getCart (token: string): Promise<any>{
+        const CART: Cart = await this.getCartFromPersistence(token);
+        if(CART == null)
             return null;
-        const CART: Cart = await this.persistence.getCart(ID);
         const PRODUCTS: Map<string, number> = CART.getProducts();
         const OBJ = {};
         let i = 0, total = 0, taxes = 0;
@@ -51,10 +58,10 @@ export class Model {
         });
         OBJ["total"] = total;
         OBJ["tax"] = taxes;
-        OBJ["id"] = ID;
-        return JSON.parse(JSON.stringify(OBJ));
+        OBJ["id"] = CART.getId();
+        return OBJ;
     }
-    
+
     public async deleteCart (token: string): Promise<boolean> {
         const ID: string = await this.tokenToID(token);
         if(ID == null)
@@ -63,18 +70,24 @@ export class Model {
     }
 
     public async addToCart (token: string, productId: string, quantity: number): Promise<boolean> {
-        const CART_ID: string = await this.tokenToID(token);
-        if(CART_ID == null)
-            return false;
-        const QUANTITY_OLD: number = await this.persistence.getProductQuantity(CART_ID, productId);
-        return this.persistence.addToCart(CART_ID, productId, quantity + QUANTITY_OLD);
+        const CART: Cart = await this.getCartFromPersistence(token);
+        if(CART == null) {
+            const CART_NEW: Cart = new Cart(CART.getId(), new Map<string, number>());
+            CART_NEW.addToCart(productId, quantity);
+            return this.persistence.updateCart(CART_NEW);
+        }
+        else{
+            CART.addToCart(productId, quantity);
+            return this.persistence.updateCart(CART);
+        }
     }
 
     public async removeFromCart (token: string, productId: string): Promise<boolean> {
-        const CART_ID: string = await this.tokenToID(token);
-        if(CART_ID == null)
+        const CART: Cart = await this.getCartFromPersistence(token);
+        if(CART == null)
             return false;
-        return this.persistence.removeFromCart(CART_ID, productId);
+        CART.removeFromCart(productId);
+        return this.persistence.updateCart(CART);
     }
 
     private async tokenToID (token: string): Promise<string>{

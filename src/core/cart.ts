@@ -7,7 +7,21 @@ export class Cart {
         this.products = products;
     }
 
+    public addToCart (productId: string, quantity: number): void{
+        if(this.products[productId] == null)
+            this.products[productId] = 0;
+        this.products[productId] += quantity;
+    }
+
+    public removeFromCart (productId: string): void {
+        this.products.delete(productId);
+    }
+
     public getProducts (): Map<string, number> {
         return this.products;
+    }
+
+    public getId (): string {
+        return this.id;
     }
 }

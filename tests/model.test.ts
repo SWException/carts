@@ -16,6 +16,7 @@ test('schema', () => {
 });
 
 test('getCart', async () => {
+    await MODEL.addToCart("1", "1", 2);
     const RES = await MODEL.getCart("1");
     expect(RES).toMatchSchema(CART_SCHEMA);
 });
@@ -26,8 +27,11 @@ test("deleteCart", async () => {
 });
 
 test("addToCart", async () => {
-    const RES = await MODEL.addToCart("1", "1", 2);
-    expect(RES).toBe(true);
+    let res = await MODEL.addToCart("1", "1", 2);
+    expect(res).toBe(true);
+    res = await MODEL.addToCart("1", "1", 1);
+    expect(res).toBe(true);
+
 });
 
 test("removeFromCart", async () => {

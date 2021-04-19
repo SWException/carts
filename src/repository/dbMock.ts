@@ -9,7 +9,7 @@ export class DbMock implements Persistence {
         ["ccc", 1]
     ])
 
-    public async getCart (id: string): Promise<Cart> {
+    public async getItem (id: string): Promise<Cart> {
         return new Cart("user123", DbMock.CART_FAKE);
     }
     public async deleteCart (id: string): Promise<boolean> {
@@ -17,10 +17,6 @@ export class DbMock implements Persistence {
     }
     public async updateCart (cart: Cart): Promise<boolean> {
         return true;
-    }
-    
-    public async getProductQuantity (cartId: string, productId: string): Promise<number> {
-        return 0;
     }
 
 }

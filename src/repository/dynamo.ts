@@ -29,10 +29,10 @@ export class Dynamo implements Persistence {
             IndexName: "id-index"
         };
 
-       await this.DOCUMENT_CLIENT.delete(PARAMS).promise().catch(
+        await this.DOCUMENT_CLIENT.delete(PARAMS).promise().catch(
             (err) => { return err; }
         );
-        return true;;      
+        return true;     
     }
 
     
