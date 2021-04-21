@@ -42,20 +42,23 @@ export class Model {
         const PRODUCTS: Map<string, number> = CART.getProducts();
         const OBJ = {};
         let i = 0, total = 0, taxes = 0;
+        console.log(JSON.stringify(PRODUCTS));
+
         PRODUCTS.forEach((quantity, productId) => {
             const PRODUCT = this.productsService.getProductInfo(productId);
-            const TAX = PRODUCT["price"]*PRODUCT["tax"]/100;
-            const PRICE = PRODUCT["price"] + TAX;
-            total += PRICE;
-            taxes += TAX;
+            console.log(PRODUCT);
+            
+            total += PRODUCT["price"];
+            taxes += PRODUCT["price"] * PRODUCT["tax"]/100;
             OBJ["products"][i++] = {
                 "id": productId,
                 "name": PRODUCT["name"],
-                "primaryPhoto": PRODUCT["images"][0],
-                "price": PRICE,
+                "primaryPhoto": PRODUCT["primaryPhoto"],
+                "price": PRODUCT["price"],
                 "quantity": quantity
             };
         });
+
         OBJ["total"] = total;
         OBJ["tax"] = taxes;
         OBJ["id"] = CART.getId();

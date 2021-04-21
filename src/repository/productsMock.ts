@@ -14,7 +14,7 @@ export class ProductsMock implements Products {
         stock: 100
     };
 
-    getProductInfo (id: string): JSON {
+    getProductInfo (id: string): Promise<any> {
         return JSON.parse(JSON.stringify(ProductsMock.PRODUCT));
     }
 

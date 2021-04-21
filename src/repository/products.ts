@@ -1,3 +1,3 @@
 export interface Products {
-    getProductInfo(id: string): JSON;
+    getProductInfo(id: string): Promise<any>;
 }

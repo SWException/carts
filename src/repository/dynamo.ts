@@ -7,10 +7,10 @@ export class Dynamo implements Persistence {
     private static readonly TABLE_CARTS = "carts";
     private DOCUMENT_CLIENT = new AWS.DynamoDB.DocumentClient({ region: "eu-central-1" });
 
-    public async getItem (id: string): Promise<Cart> {
+    public async getItem (userid: string): Promise<Cart> {
         const PARAMS = {
             Key: {
-                id: id
+                id: userid
             },
             TableName: Dynamo.TABLE_CARTS
         };
@@ -19,10 +19,10 @@ export class Dynamo implements Persistence {
         return DATA.Item? new Cart(DATA.Item.id, DATA.Item.products) : null;
     }
 
-    public async deleteCart (id: string): Promise<boolean> {
+    public async deleteCart (userid: string): Promise<boolean> {
         const PARAMS = {
             Key: {
-                id: id
+                id: userid
             },
             TableName: Dynamo.TABLE_CARTS
         };

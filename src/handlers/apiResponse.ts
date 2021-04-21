@@ -5,6 +5,11 @@ export default function response (statusCode: number,
     data?: JSON): APIGatewayProxyResult {
 
     const BODY = {};
+    if(statusCode>=300){
+        BODY["status"] = "error";
+    }else{
+        BODY["status"] = "success";
+    }
     if(message)
         BODY["message"] = message;
     if(data)
