@@ -68,7 +68,7 @@ export class Dynamo implements Persistence {
         const DATA = await this.DOCUMENT_CLIENT.update(PARAMS).promise().catch(
             () => { return false; }
         );
-        return DATA;
+        return DATA ? true : false;
     }
 
 
