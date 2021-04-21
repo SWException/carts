@@ -10,12 +10,15 @@ export class DbMock implements Persistence {
     ])
 
     public async getItem (id: string): Promise<Cart> {
+        if(id)
         return new Cart("user123", DbMock.CART_FAKE);
     }
     public async deleteCart (id: string): Promise<boolean> {
+        if(id)
         return true;
     }
     public async updateCart (cart: Cart): Promise<boolean> {
+        if(cart)
         return true;
     }
 
