@@ -58,7 +58,7 @@ export class Dynamo implements Persistence {
         const PARAMS = {
             TableName: Dynamo.TABLE_CARTS,
             Key: {
-                id: item.getID()
+                id: cart.getID()
             },
             UpdateExpression: expression,
             ExpressionAttributeValues: VALUES
@@ -66,7 +66,7 @@ export class Dynamo implements Persistence {
         console.log(PARAMS);
 
         const DATA = await this.DOCUMENT_CLIENT.update(PARAMS).promise().catch(
-            (err) => { return err; }
+            () => { return false; }
         );
         return DATA;
     }
