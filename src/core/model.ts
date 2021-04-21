@@ -1,13 +1,13 @@
-import { Persistence } from "../repository/persistence";
-import { Products } from "../repository/products";
-import { Users } from "../repository/users";
-import { Dynamo } from "../repository/dynamo";
-import { DbMock } from "../repository/dbMock";
-import { ProductsMock } from "../repository/productsMock";
-import { ProductsService } from "../repository/productsService";
-import { UsersService } from "../repository/usersService";
-import { UsersMock } from "../repository/usersMock";
-import { Cart } from "./cart";
+import { Persistence } from "src/repository/persistence";
+import { Products } from "src/repository/products";
+import { Users } from "src/repository/users";
+import { Dynamo } from "src/repository/dynamo";
+import { DbMock } from "src/repository/dbMock";
+import { ProductsMock } from "src/repository/productsMock";
+import { ProductsService } from "src/repository/productsService";
+import { UsersService } from "src/repository/usersService";
+import { UsersMock } from "src/repository/usersMock";
+import { Cart } from "src/core/cart";
 
 export class Model {
     private readonly persistence: Persistence;
@@ -72,7 +72,7 @@ export class Model {
     public async addToCart (token: string, productId: string, quantity: number): Promise<boolean> {
         const CART: Cart = await this.getCartFromPersistence(token);
         if(CART == null) {
-            const CART_NEW: Cart = new Cart(CART.getId(), new Map<string, number>());
+            const CART_NEW: Cart = new Cart(await this.tokenToID(token), new Map<string, number>());
             CART_NEW.addToCart(productId, quantity);
             return this.persistence.updateCart(CART_NEW);
         }

@@ -37,6 +37,7 @@ provider:
   environment:
     AWS_NODEJS_CONNECTION_REUSE_ENABLED: "1"
     REGION: ${self:provider.region}
+    SERVICES: ${env:SERVICES}
 
   iam:
     role:

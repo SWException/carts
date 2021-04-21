@@ -1,7 +1,4 @@
 export class Cart {
-    getID() {
-        throw new Error("Method not implemented.");
-    }
     private readonly id: string;
     private readonly products: Map<string, number>; // id prodotto associato a quantità
 

@@ -7,26 +7,24 @@ export class Dynamo implements Persistence {
     private static readonly TABLE_CARTS = "carts";
     private DOCUMENT_CLIENT = new AWS.DynamoDB.DocumentClient({ region: "eu-central-1" });
 
-
     public async getItem (id: string): Promise<Cart> {
         const PARAMS = {
             Key: {
                 id: id
             },
-            TableName: Dynamo.TABLE_CARTS,
-            IndexName: "id-index"
+            TableName: Dynamo.TABLE_CARTS
         };
 
         const DATA = await this.DOCUMENT_CLIENT.get(PARAMS).promise();
         return DATA.Item? new Cart(DATA.Item.id, DATA.Item.products) : null;
     }
+
     public async deleteCart (id: string): Promise<boolean> {
         const PARAMS = {
             Key: {
                 id: id
             },
-            TableName: Dynamo.TABLE_CARTS,
-            IndexName: "id-index"
+            TableName: Dynamo.TABLE_CARTS
         };
 
         await this.DOCUMENT_CLIENT.delete(PARAMS).promise().catch(
@@ -35,7 +33,6 @@ export class Dynamo implements Persistence {
         return true;     
     }
 
-    
     public async updateCart (cart: Cart): Promise<boolean> {
         const VALUES = {};
         let expression = "SET ";
@@ -58,7 +55,7 @@ export class Dynamo implements Persistence {
         const PARAMS = {
             TableName: Dynamo.TABLE_CARTS,
             Key: {
-                id: cart.getID()
+                id: cart.getId()
             },
             UpdateExpression: expression,
             ExpressionAttributeValues: VALUES
@@ -70,6 +67,4 @@ export class Dynamo implements Persistence {
         );
         return DATA ? true : false;
     }
-
-
 }
