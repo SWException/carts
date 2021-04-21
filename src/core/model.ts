@@ -44,18 +44,20 @@ export class Model {
         let i = 0, total = 0, taxes = 0;
         console.log(JSON.stringify(PRODUCTS));
 
+        const ARRAY_PROMISE: Array<Promise<any>> = null;
         PRODUCTS.forEach((quantity, productId) => {
-            const PRODUCT = this.productsService.getProductInfo(productId);
-            console.log(PRODUCT);
-            
-            total += PRODUCT["price"];
-            taxes += PRODUCT["price"] * PRODUCT["tax"]/100;
+            ARRAY_PROMISE.push(this.productsService.getProductInfo(productId));
+        });
+        const ARRAY_TMP: Array<any> = await Promise.all(ARRAY_PROMISE);
+        ARRAY_TMP.forEach((product) => {
+            total += product["price"];
+            taxes += product["price"] * product["tax"]/100;
             OBJ["products"][i++] = {
-                "id": productId,
-                "name": PRODUCT["name"],
-                "primaryPhoto": PRODUCT["primaryPhoto"],
-                "price": PRODUCT["price"],
-                "quantity": quantity
+                "id": product["id"],
+                "name": product["name"],
+                "primaryPhoto": product["primaryPhoto"],
+                "price": product["price"],
+                "quantity": PRODUCTS[product["id"]]
             };
         });
 
