@@ -42,22 +42,16 @@ export class Dynamo implements Persistence {
     }
 
     public async updateCart (cart: Cart): Promise<boolean> {
-        const VALUES = {};
-        let expression = "SET ";
+        let expression = "SET products";
         let first = true;
 
-        Object.keys(cart).forEach(function (key) {
-            if (key != "id") {
-                const VALUE = cart[key];
-                if (!first) {
-                    expression += ", "
-                } 
-                else {
-                    first = false;
-                }
-                expression += key + " = :" + key;
-                VALUES[":" + key] = VALUE;
-            }
+        const PRODUCTS: Map<string, number> = cart.getProducts();
+        const VALUE: Array<any> = new Array<any>();
+        PRODUCTS.forEach((value, key) => {
+            VALUE.push({
+                "productId": key,
+                "quantity": value
+            });
         });
 
         const PARAMS = {
@@ -66,7 +60,7 @@ export class Dynamo implements Persistence {
                 id: cart.getId()
             },
             UpdateExpression: expression,
-            ExpressionAttributeValues: VALUES
+            ExpressionAttributeValues: {}
         }
         console.log(PARAMS);
 

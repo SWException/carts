@@ -1,6 +1,6 @@
 export class Cart {
     private readonly id: string;
-    private readonly products: Map<string, number>; // id prodotto associato a quantità
+    private readonly products: Map<string, number>;
 
     constructor (id: string, products: Map<string, number>) {
         this.id = id;
