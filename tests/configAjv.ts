@@ -14,5 +14,5 @@ export function setFormats (ajv): void {
     });
 
     ajv.addFormat("int64", { type: "number", validate: /^\d+$/ });
-    ajv.addFormat("uri", { type: "string" });
+    ajv.addFormat("uri", { type: "string", validate: /.*/ });
 }

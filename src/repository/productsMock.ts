@@ -11,7 +11,9 @@ export class ProductsMock implements Products {
         tax: 22,
         show: true,
         showHome: false,
-        stock: 100
+        stock: 100,
+        primaryPhoto: "https://www.google.it",
+        quantity: 1
     };
 
     getProductInfo (id: string): Promise<any> {

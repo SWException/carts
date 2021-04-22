@@ -33,7 +33,7 @@
             "total": { "type": "number", "format": "float", "minimum": 0},
             "tax": { "type": "number", "format": "float", "minimum": 0 }
         },
-        "required": ["cartId", "total", "tax"]
+        "required": ["id", "total", "tax"]
     },
     "responseCart":{
         "allOf" : [
