@@ -38,24 +38,33 @@ export class Model {
 
     public async getCart (token: string): Promise<any>{
         const CART: Cart = await this.getCartFromPersistence(token);
+        console.log("getCart CART: ", CART);
+        
         if(CART == null)
             return null;
         const PRODUCTS: Map<string, number> = CART.getProducts();
         const OBJ = {};
-        let i = 0, total = 0, taxes = 0;
-        console.log(JSON.stringify(PRODUCTS));
+        let total = 0, taxes = 0;
 
-        const ARRAY_PROMISE: Array<Promise<any>> = null;
+        console.log(PRODUCTS);
+        const ARRAY_PROMISE: Array<Promise<any>> = new Array<Promise<any>>();
         PRODUCTS.forEach((_quantity, productId) => {
+            console.log("PRODUCTS.forEach: ", _quantity, productId);
             ARRAY_PROMISE.push(this.productsService.getProductInfo(productId));
         });
+        console.log("getCart model ARRAY_PROMISE: ", ARRAY_PROMISE);
+
         const ARRAY_TMP: Array<any> = await Promise.all(ARRAY_PROMISE);
-        ARRAY_TMP.forEach((product) => {
+
+        console.log("getCart model ARRAY_PROMISE after await: ", ARRAY_PROMISE);
+        console.log("getCart model ARRAY_TMP: ", ARRAY_TMP);
+
+        ARRAY_TMP.forEach((product, i) => {
             const PRODUCT_ID: string = product["id"];
             if(PRODUCT_ID != null) {
                 total += product["price"];
                 taxes += product["price"] * product["tax"]/100;
-                OBJ["products"][i++] = {
+                OBJ["products"][i] = {
                     "id": PRODUCT_ID,
                     "name": product["name"],
                     "primaryPhoto": product["primaryPhoto"],
@@ -102,5 +111,4 @@ export class Model {
     private async tokenToID (token: string): Promise<string>{
         return await this.usersService.getUsername(token);
     }
-
 }
