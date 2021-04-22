@@ -7,7 +7,9 @@ import { ProductsMock } from "src/repository/productsMock";
 import { ProductsService } from "src/repository/productsService";
 import { UsersService } from "src/repository/usersService";
 import { UsersMock } from "src/repository/usersMock";
-import { Cart } from "src/core/cart";
+import { Cart } from "./cart";
+import { CartWithDetails } from "./cartWithDetails";
+import { Product } from "./product";
 
 export class Model {
     private readonly persistence: Persistence;
@@ -36,14 +38,13 @@ export class Model {
         return new Model(new DbMock(), new ProductsMock(), new UsersMock());
     }
 
-    public async getCart (token: string): Promise<any>{
+    public async getCart (token: string): Promise<CartWithDetails>{
         const CART: Cart = await this.getCartFromPersistence(token);
         console.log("getCart CART: ", CART);
         
         if(CART == null)
             return null;
         const PRODUCTS: Map<string, number> = CART.getProducts();
-        let total = 0, taxes = 0;
 
         console.log(PRODUCTS);
         const ARRAY_PROMISE: Array<Promise<any>> = new Array<Promise<any>>();
@@ -57,27 +58,15 @@ export class Model {
 
         console.log("getCart model ARRAY_PROMISE after await: ", ARRAY_PROMISE);
         console.log("getCart model ARRAY_TMP: ", ARRAY_TMP);
-        let OBJ = [];
-        OBJ["products"] = [];
-        ARRAY_TMP.forEach((product) => {
-            const PRODUCT_ID: string = product["id"];
-            if(PRODUCT_ID != null) {
-                total += product["price"];
-                taxes += product["price"] * product["tax"]/100;
-                OBJ["products"].push({
-                    "id": PRODUCT_ID,
-                    "name": product["name"],
-                    "primaryPhoto": product["primaryPhoto"],
-                    "price": product["price"],
-                    "quantity": PRODUCTS[PRODUCT_ID]
-                });
-            }
+
+        const CART_EXPANDED: CartWithDetails = new CartWithDetails(CART.getId());
+        ARRAY_TMP.forEach((item) => {
+            const PRODUCT: Product = new Product(item["id"], item["name"], item["primaryPhoto"],
+            item["price"], item["tax"], item["quantity"]);
+            CART_EXPANDED.addProduct(PRODUCT);
         });
 
-        OBJ["total"] = total;
-        OBJ["tax"] = taxes;
-        OBJ["id"] = CART.getId();
-        return OBJ;
+        return CART_EXPANDED;
     }
 
     public async deleteCart (token: string): Promise<boolean> {

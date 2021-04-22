@@ -15,9 +15,10 @@
             "name": { "type": "string", "minLength": 1, "maxLength": 50 },
             "primaryPhoto": { "type": "string", "format": "uri" },
             "price": { "type": "number", "format": "float", "minimum": 0 },
+            "tax": { "type": "number", "format": "float", "minimum": 0 },
             "quantity" : { "type": "integer", "minimum": 1 }
         },
-        "required": ["productId", "name", "primaryPhoto", "price", "quantity"]
+        "required": ["productId", "name", "primaryPhoto", "price", "tax", "quantity"]
     },
     "cartProducts": { 
         "type": "array",
@@ -27,7 +28,7 @@
     "cart":{
         "type": "object",
         "properties":{
-            "cartId":{ "type": "string", "minLength": 1 },
+            "id":{ "type": "string", "minLength": 1 },
             "products": { "$ref":"#/cartProducts" },
             "total": { "type": "number", "format": "float", "minimum": 0},
             "tax": { "type": "number", "format": "float", "minimum": 0 }
