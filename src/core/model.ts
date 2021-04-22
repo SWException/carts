@@ -43,37 +43,34 @@ export class Model {
         if(CART == null)
             return null;
         const PRODUCTS: Map<string, number> = CART.getProducts();
-        const OBJ = {};
         let total = 0, taxes = 0;
 
         console.log(PRODUCTS);
         const ARRAY_PROMISE: Array<Promise<any>> = new Array<Promise<any>>();
-        let test: boolean = false;
         PRODUCTS.forEach((_quantity, productId, ) => {
-            test=true;
             console.log("PRODUCTS.forEach: ", _quantity, productId);
             ARRAY_PROMISE.push(this.productsService.getProductInfo(productId));
         });
-        console.log(test ? "dio boia":"madonna troia");
         console.log("getCart model ARRAY_PROMISE: ", ARRAY_PROMISE);
 
         const ARRAY_TMP: Array<any> = await Promise.all(ARRAY_PROMISE);
 
         console.log("getCart model ARRAY_PROMISE after await: ", ARRAY_PROMISE);
         console.log("getCart model ARRAY_TMP: ", ARRAY_TMP);
-
-        ARRAY_TMP.forEach((product, i) => {
+        let OBJ = [];
+        OBJ["products"] = [];
+        ARRAY_TMP.forEach((product) => {
             const PRODUCT_ID: string = product["id"];
             if(PRODUCT_ID != null) {
                 total += product["price"];
                 taxes += product["price"] * product["tax"]/100;
-                OBJ["products"][i] = {
+                OBJ["products"].push({
                     "id": PRODUCT_ID,
                     "name": product["name"],
                     "primaryPhoto": product["primaryPhoto"],
                     "price": product["price"],
                     "quantity": PRODUCTS[PRODUCT_ID]
-                };
+                });
             }
         });
 
