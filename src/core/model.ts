@@ -48,7 +48,7 @@ export class Model {
 
         console.log(PRODUCTS);
         const ARRAY_PROMISE: Array<Promise<any>> = new Array<Promise<any>>();
-        PRODUCTS.forEach((_quantity, productId) => {
+        PRODUCTS.forEach((_quantity, productId, PRODUCTS) => {
             console.log("PRODUCTS.forEach: ", _quantity, productId);
             ARRAY_PROMISE.push(this.productsService.getProductInfo(productId));
         });
