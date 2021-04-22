@@ -40,21 +40,17 @@ test("removeFromCart", async () => {
 });
 
 test("error getCart", async () => {
-    const RES = await MODEL.getCart(null);
-    expect(RES).toBe(null);
+    await expect(MODEL.getCart(null)).rejects.toThrow(Error);
 });
 
 test("error deleteCart", async () => {
-    const RES = await MODEL.deleteCart(null);
-    expect(RES).toBe(false);
+    await expect(MODEL.deleteCart(null)).rejects.toThrow(Error);
 });
 
 test("error addToCart", async () => {
-    const RES = await MODEL.addToCart(null, "1", 2);
-    expect(RES).toBe(false);
+    await expect(MODEL.addToCart(null, "1", 2)).rejects.toThrow(Error);
 });
 
 test("error removeFromCart", async () => {
-    const RES = await MODEL.removeFromCart(null, "1");
-    expect(RES).toBe(false);
+    await expect(MODEL.removeFromCart(null, "1")).rejects.toThrow(Error);
 });

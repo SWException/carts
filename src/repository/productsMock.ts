@@ -15,7 +15,9 @@ export class ProductsMock implements Products {
     };
 
     getProductInfo (id: string): Promise<any> {
-        return JSON.parse(JSON.stringify(ProductsMock.PRODUCT));
+        if(id)
+            return JSON.parse(JSON.stringify(ProductsMock.PRODUCT));
+        return null;
     }
 
 }
