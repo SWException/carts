@@ -77,20 +77,33 @@ export class Model {
     }
 
     public async addToCart (token: string, productId: string, quantity: number): Promise<boolean> {
-        const CART: Cart = await this.getCartFromPersistence(token);
+        const CART: Cart = await this.getCartFromPersistence(token).catch((err) => {
+            console.log(err.message);
+            return null;
+        });
+        console.log("CART: ", CART);
+        
         if(CART == null) {
+            console.log("Creating new cart");
             const CART_NEW: Cart = new Cart(await this.tokenToID(token), new Map<string, number>());
             CART_NEW.addToCart(productId, quantity);
             return this.persistence.updateCart(CART_NEW);
         }
         else{
+            console.log("Updating cart");
             CART.addToCart(productId, quantity);
             return this.persistence.updateCart(CART);
         }
     }
 
     public async removeFromCart (token: string, productId: string): Promise<boolean> {
-        const CART: Cart = await this.getCartFromPersistence(token);
+        const CART: Cart = await this.getCartFromPersistence(token).catch((err) => {
+            console.log(err.message);
+            return null;
+        });
+        console.log(CART);
+        console.log(productId);
+        
         if(CART == null)
             return false;
         CART.removeFromCart(productId);

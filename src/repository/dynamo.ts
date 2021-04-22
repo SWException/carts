@@ -21,7 +21,7 @@ export class Dynamo implements Persistence {
         const PROD: Map<string, number> = new Map<string, number>();
         
         DATA.Item.products.forEach(product => {
-            PROD[product.id] = product.quantity;
+            PROD[product.productId] = product.quantity;
         });
 
         return DATA.Item ? new Cart(DATA.Item.id, PROD) : null;
@@ -35,38 +35,36 @@ export class Dynamo implements Persistence {
             TableName: Dynamo.TABLE_CARTS
         };
 
-        await this.DOCUMENT_CLIENT.delete(PARAMS).promise().catch(
-            (err) => { return err; }
-        );
+        await this.DOCUMENT_CLIENT.delete(PARAMS).promise();
         return true;     
     }
 
     public async updateCart (cart: Cart): Promise<boolean> {
-        let expression = "SET products";
-        let first = true;
-
         const PRODUCTS: Map<string, number> = cart.getProducts();
         const VALUE: Array<any> = new Array<any>();
-        PRODUCTS.forEach((value, key) => {
+        console.log("PRODUCTS update dynamo:", PRODUCTS);
+        
+        Object.keys(PRODUCTS).forEach((key) => {
             VALUE.push({
                 "productId": key,
-                "quantity": value
+                "quantity": PRODUCTS[key]
             });
         });
+        console.log("Value update dynamo: ", VALUE);
 
         const PARAMS = {
             TableName: Dynamo.TABLE_CARTS,
-            Key: {
-                id: cart.getId()
-            },
-            UpdateExpression: expression,
-            ExpressionAttributeValues: {}
+            Item: {
+                id: cart.getId(),
+                products: VALUE
+            }
         }
-        console.log(PARAMS);
+        console.log(JSON.stringify(PARAMS));
 
-        const DATA = await this.DOCUMENT_CLIENT.update(PARAMS).promise().catch(
+        const DATA = await this.DOCUMENT_CLIENT.put(PARAMS).promise().catch(
             () => { return false; }
         );
+
         return DATA ? true : false;
     }
 }

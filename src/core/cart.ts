@@ -1,6 +1,6 @@
 export class Cart {
     private readonly id: string;
-    private readonly products: Map<string, number>;
+    private readonly products: Map<string, number> = new Map<string, number>();
 
     constructor (id: string, products: Map<string, number>) {
         this.id = id;
@@ -14,7 +14,8 @@ export class Cart {
     }
 
     public removeFromCart (productId: string): void {
-        this.products.delete(productId);
+        delete this.products[productId];
+        return;
     }
 
     public getProducts (): Map<string, number> {
