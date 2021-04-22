@@ -48,10 +48,9 @@ export class Model {
 
         console.log(PRODUCTS);
         const ARRAY_PROMISE: Array<Promise<any>> = new Array<Promise<any>>();
-        console.log("c'è nessunooooo???? ", PRODUCTS["2"]);
-        PRODUCTS.forEach((_quantity, productId, ) => {
-            console.log("PRODUCTS.forEach: ", _quantity, productId);
-            ARRAY_PROMISE.push(this.productsService.getProductInfo(productId));
+        Object.keys(PRODUCTS).forEach(key => {
+            console.log("sto iterando");
+            ARRAY_PROMISE.push(this.productsService.getProductInfo(key));
         });
         console.log("getCart model ARRAY_PROMISE: ", ARRAY_PROMISE);
 

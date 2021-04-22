@@ -19,12 +19,12 @@ export class Dynamo implements Persistence {
         console.log("getItem Dynamo: ", JSON.stringify(DATA.Item));
 
         const PROD: Map<string, number> = new Map<string, number>();
-
+        
         DATA.Item.products.forEach(product => {
             PROD[product.id] = product.quantity;
         });
 
-        return DATA.Item? new Cart(DATA.Item.id, PROD) : null;
+        return DATA.Item ? new Cart(DATA.Item.id, PROD) : null;
     }
 
     public async deleteCart (userid: string): Promise<boolean> {
