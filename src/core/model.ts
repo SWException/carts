@@ -48,6 +48,7 @@ export class Model {
 
         console.log(PRODUCTS);
         const ARRAY_PROMISE: Array<Promise<any>> = new Array<Promise<any>>();
+        console.log("c'è nessunooooo???? ", PRODUCTS["2"]);
         PRODUCTS.forEach((_quantity, productId, ) => {
             console.log("PRODUCTS.forEach: ", _quantity, productId);
             ARRAY_PROMISE.push(this.productsService.getProductInfo(productId));
@@ -62,7 +63,7 @@ export class Model {
         const CART_EXPANDED: CartWithDetails = new CartWithDetails(CART.getId());
         ARRAY_TMP.forEach((item) => {
             const PRODUCT: Product = new Product(item["id"], item["name"], item["primaryPhoto"],
-            item["price"], item["tax"], item["quantity"]);
+                item["price"], item["tax"], item["quantity"]);
             CART_EXPANDED.addProduct(PRODUCT);
         });
 

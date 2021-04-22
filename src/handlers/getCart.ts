@@ -8,10 +8,10 @@ export const HANDLER: APIGatewayProxyHandler = async (event) => {
         return response(400, "invalid token");
     const MODEL: Model = Model.createModel();
     return await MODEL.getCart(TOKEN)
-    .then(CART => {
-        return response(200, null, CART);
-    })
-    .catch((err: Error) => {
-        return response(400, err.message);
-    });
+        .then(cart => {
+            return response(200, null, JSON.parse(JSON.stringify(cart)));
+        })
+        .catch((err: Error) => {
+            return response(400, err.message);
+        });
 }
