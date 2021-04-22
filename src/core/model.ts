@@ -48,10 +48,13 @@ export class Model {
 
         console.log(PRODUCTS);
         const ARRAY_PROMISE: Array<Promise<any>> = new Array<Promise<any>>();
-        PRODUCTS.forEach((_quantity, productId, PRODUCTS) => {
+        let test: boolean = false;
+        PRODUCTS.forEach((_quantity, productId, ) => {
+            test=true;
             console.log("PRODUCTS.forEach: ", _quantity, productId);
             ARRAY_PROMISE.push(this.productsService.getProductInfo(productId));
         });
+        console.log(test ? "dio boia":"madonna troia");
         console.log("getCart model ARRAY_PROMISE: ", ARRAY_PROMISE);
 
         const ARRAY_TMP: Array<any> = await Promise.all(ARRAY_PROMISE);
