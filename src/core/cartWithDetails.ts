@@ -5,6 +5,7 @@ export class CartWithDetails {
     private readonly products: Array<Product>;
     private total: number;
     private tax: number;
+    private itemCount: number = 0;
 
     constructor (id: string) {
         this.id = id;
@@ -30,8 +31,9 @@ export class CartWithDetails {
     }    
     
     public addProduct(product: Product): void{
-        this.total= product.getPrice();
-        this.tax += product.getPrice() * product.getTax()/100;
+        this.itemCount += product.getQuantity();
+        this.total += product.getTotalPrice();
+        this.tax += product.getTotalPrice() * product.getTax()/100;
         this.products.push(product);
     }
 }

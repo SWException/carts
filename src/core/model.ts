@@ -62,10 +62,11 @@ export class Model {
         const CART_EXPANDED: CartWithDetails = new CartWithDetails(CART.getId());
         ARRAY_TMP.forEach((item) => {
             const PRODUCT: Product = new Product(item["id"], item["name"], item["primaryPhoto"],
-                item["price"], item["tax"], item["quantity"]);
+                item["price"], item["tax"], PRODUCTS[item["id"]]);
             CART_EXPANDED.addProduct(PRODUCT);
         });
 
+        
         return CART_EXPANDED;
     }
 

@@ -67,7 +67,7 @@ functions:
     handler: "src/handlers/addToCart.HANDLER"
     events:
       - http:
-          path: /cart/{id}
+          path: /cart/
           method: POST
           cors: true
   removeFromCart:
