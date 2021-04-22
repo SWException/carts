@@ -31,6 +31,7 @@ export class Model {
     public static createModel (): Model {
         return new Model(new Dynamo(), new ProductsService(), new UsersService());
     }
+    
     public static createModelTest (): Model {
         return new Model(new DbMock(), new ProductsMock(), new UsersMock());
     }
@@ -45,20 +46,23 @@ export class Model {
         console.log(JSON.stringify(PRODUCTS));
 
         const ARRAY_PROMISE: Array<Promise<any>> = null;
-        PRODUCTS.forEach((quantity, productId) => {
+        PRODUCTS.forEach((_quantity, productId) => {
             ARRAY_PROMISE.push(this.productsService.getProductInfo(productId));
         });
         const ARRAY_TMP: Array<any> = await Promise.all(ARRAY_PROMISE);
         ARRAY_TMP.forEach((product) => {
-            total += product["price"];
-            taxes += product["price"] * product["tax"]/100;
-            OBJ["products"][i++] = {
-                "id": product["id"],
-                "name": product["name"],
-                "primaryPhoto": product["primaryPhoto"],
-                "price": product["price"],
-                "quantity": PRODUCTS[product["id"]]
-            };
+            const PRODUCT_ID: string = product["id"];
+            if(PRODUCT_ID != null) {
+                total += product["price"];
+                taxes += product["price"] * product["tax"]/100;
+                OBJ["products"][i++] = {
+                    "id": PRODUCT_ID,
+                    "name": product["name"],
+                    "primaryPhoto": product["primaryPhoto"],
+                    "price": product["price"],
+                    "quantity": PRODUCTS[PRODUCT_ID]
+                };
+            }
         });
 
         OBJ["total"] = total;
