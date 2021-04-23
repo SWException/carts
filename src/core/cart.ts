@@ -13,6 +13,16 @@ export class Cart {
         this.products[productId] += quantity;
     }
 
+    public updateCart (productId: string, quantity: number): void{
+        if(this.products[productId] == null){
+            console.log("updateCart. Ehi product null");
+            return;
+        }
+        console.log("aggiorno quantità", quantity);
+        
+        this.products[productId] = quantity;
+    }
+
     public removeFromCart (productId: string): void {
         delete this.products[productId];
         return;

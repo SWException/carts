@@ -12,12 +12,12 @@ export const HANDLER: APIGatewayProxyHandler = async (event) => {
     if(TOKEN == null || PRODUCT_ID == null || QUANTITY == null){
         return response(400, "invalid request. Missing properties");
     }
-    console.log("addToCart");
+    console.log("updateCart");
     
     const MODEL: Model = Model.createModel();
     console.log("Model created");
     
-    const RESULT: boolean = await MODEL.addToCart(TOKEN, PRODUCT_ID, QUANTITY);
+    const RESULT: boolean = await MODEL.updateCart(TOKEN, PRODUCT_ID, QUANTITY);
     console.log(RESULT);
     return RESULT ? response(200, "success") : response(400, "failure");
 

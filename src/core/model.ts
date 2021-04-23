@@ -97,6 +97,29 @@ export class Model {
         }
     }
 
+    public async updateCart (token: string, productId: string, quantity: number): Promise<boolean> {
+        // Uguale ad addToCart, ma non somma la quantità a quella esistente, ma la sostituisce
+        const CART: Cart = await this.getCartFromPersistence(token).catch((err) => {
+            console.log(err.message);
+            return null;
+        });
+        console.log("CART: ", CART);
+        console.log("NEW QUANTITY: ", quantity);
+        
+        
+        if(CART == null) {
+            console.log("Creating new cart in updateCart");
+            const CART_NEW: Cart = new Cart(await this.tokenToID(token), new Map<string, number>());
+            CART_NEW.updateCart(productId, quantity); // Questa è una riga diversa da add to cart
+            return this.persistence.updateCart(CART_NEW);
+        }
+        else{
+            console.log("Updating cart in updateCart");
+            CART.updateCart(productId, quantity); // Questa è una riga diversa da add to cart
+            return this.persistence.updateCart(CART);
+        }
+    }
+
     public async removeFromCart (token: string, productId: string): Promise<boolean> {
         const CART: Cart = await this.getCartFromPersistence(token).catch((err) => {
             console.log(err.message);

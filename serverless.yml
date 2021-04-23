@@ -60,7 +60,7 @@ functions:
     handler: "src/handlers/deleteCart.HANDLER"
     events:
       - http:
-          path: /cart
+          path: /cart/
           method: DELETE
           cors: true
   addToCart:
@@ -70,11 +70,18 @@ functions:
           path: /cart/
           method: POST
           cors: true
+  updateCart:
+    handler: "src/handlers/updateCart.HANDLER"
+    events:
+      - http:
+          path: /cart/product/{id}
+          method: PATCH
+          cors: true
   removeFromCart:
     handler: "src/handlers/removeFromCart.HANDLER"
     events:
       - http:
-          path: /cart/{id}
+          path: /cart/product/{id}
           method: DELETE
           cors: true
 
