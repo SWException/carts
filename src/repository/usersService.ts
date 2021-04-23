@@ -6,6 +6,8 @@ export class UsersService implements Users {
         return await fetch(process.env.SERVICES + `/users/customers/check/${token}`)
             .then(res => res.json())
             .then(responseUser => {
+                console.log("getUsername", responseUser);
+                
                 return responseUser.status == "success" ? responseUser["data"]["username"] : null;
             })
             .catch(() => {
