@@ -18,12 +18,11 @@ export class ProductsMock implements Products {
 
     public async getProductInfo (id: string): Promise<any> {
         if(id)
-            return JSON.parse(JSON.stringify(ProductsMock.PRODUCT));
+            return ProductsMock.PRODUCT;
         return null;
     }
 
-    public async checkQuantity (id: string, quantity: number): Promise<boolean> {
+    public async checkQuantity (_id: string, _quantity: number): Promise<boolean> {
         return true;
     }
-
 }
