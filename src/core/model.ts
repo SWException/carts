@@ -125,17 +125,12 @@ export class Model {
     }
 
     public async removeFromCart (token: string, productId: string): Promise<boolean> {
-        const CART: Cart = await this.getCartFromPersistence(token).catch((err) => {
-            console.log(err.message);
-            return null;
-        });
-        console.log(CART);
-        console.log(productId);
-        
-        if(CART == null)
-            return false;
-        CART.removeFromCart(productId);
-        return this.persistence.updateCart(CART);
+        const CART: Cart = await this.getCartFromPersistence(token);
+        if(CART.contains(productId)) {
+            CART.removeFromCart(productId);
+            return this.persistence.updateCart(CART);
+        }
+        return true;
     }
 
     private async tokenToID (token: string): Promise<string>{

@@ -24,8 +24,7 @@ export class Cart {
     }
 
     public removeFromCart (productId: string): void {
-        delete this.products[productId];
-        return;
+        this.products.delete(productId);
     }
 
     public getProducts (): Map<string, number> {
@@ -42,5 +41,9 @@ export class Cart {
 
     public isEmpty (): boolean {
         return this.products.size == 0;
+    }
+
+    public contains (id: string): boolean {
+        return this.products[id] != null && this.products[id] > 0;
     }
 }

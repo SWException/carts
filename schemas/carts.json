@@ -33,7 +33,7 @@
             "products": { "$ref":"#/cartProducts" },
             "total": { "type": "number", "format": "float", "minimum": 0},
             "tax": { "type": "number", "format": "float", "minimum": 0 },
-            "itemCount": { "type": "number", "format": "integer", "mininmum": 0}
+            "itemCount": { "type": "integer", "mininmum": 0}
         },
         "required": ["id", "products", "total", "tax", "itemCount"]
     },
