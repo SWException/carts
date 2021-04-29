@@ -16,10 +16,14 @@ export class ProductsMock implements Products {
         quantity: 1
     };
 
-    getProductInfo (id: string): Promise<any> {
+    public async getProductInfo (id: string): Promise<any> {
         if(id)
             return JSON.parse(JSON.stringify(ProductsMock.PRODUCT));
         return null;
+    }
+
+    public async checkQuantity (id: string, quantity: number): Promise<boolean> {
+        return true;
     }
 
 }

@@ -35,4 +35,8 @@ export class Cart {
     public getId (): string {
         return this.id;
     }
+
+    public getQuantity (id: string): number {
+        return this.products[id] != null ? this.products[id] : 0;
+    }
 }
