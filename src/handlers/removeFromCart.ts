@@ -8,6 +8,7 @@ export const HANDLER: APIGatewayProxyHandler = async (event) => {
     if(TOKEN == null || PRODUCT_ID == null)
         return response(400, "invalid request");
     const MODEL: Model = Model.createModel();
-    const RESULT: boolean = await MODEL.removeFromCart(TOKEN, PRODUCT_ID);
-    return RESULT ? response(200, "success") : response(400, "failure");
+    return await MODEL.removeFromCart(TOKEN, PRODUCT_ID)
+        .then((result: boolean) => result ? response(200, "success"):response(400, "failure"))
+        .catch((err: Error) => response(400, err.message));
 }

@@ -24,10 +24,8 @@ export class Model {
 
     private async getCartFromPersistence (token: string): Promise<Cart>{
         const ID: string = await this.tokenToID(token);
-        if(ID == null)
-            return null;
         const CART: Cart = await this.persistence.getItem(ID);
-        return CART;
+        return CART ? CART : new Cart(ID);
     }
 
     public static createModel (): Model {
@@ -41,9 +39,7 @@ export class Model {
     public async getCart (token: string): Promise<CartWithDetails>{
         const CART: Cart = await this.getCartFromPersistence(token);
         console.log("getCart CART: ", CART);
-        
-        if(CART == null)
-            return null;
+
         const PRODUCTS: Map<string, number> = CART.getProducts();
 
         console.log(PRODUCTS);
@@ -65,15 +61,12 @@ export class Model {
                 item["price"], item["tax"], PRODUCTS[item["id"]]);
             CART_EXPANDED.addProduct(PRODUCT);
         });
-
         
         return CART_EXPANDED;
     }
 
     public async deleteCart (token: string): Promise<boolean> {
         const ID: string = await this.tokenToID(token);
-        if(ID == null)
-            return false;
         return this.persistence.deleteCart(ID);
     }
 
@@ -146,6 +139,9 @@ export class Model {
     }
 
     private async tokenToID (token: string): Promise<string>{
-        return await this.usersService.getUsername(token);
+        const ID: string = await this.usersService.getUsername(token);
+        if(ID == null)
+            throw new Error("invalid token");
+        return null;
     }
 }

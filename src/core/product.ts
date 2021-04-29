@@ -19,31 +19,31 @@ export class Product{
     }
 
     //metodi mai usati ma creati solo per evitare errore di mancato utilizzo dato
-    public getId(): string {
+    public getId (): string {
         return this.productId;
     }
 
-    public getName(): string {
+    public getName (): string {
         return this.name;
     }
 
-    public getPrimaryPhoto(): string {
+    public getPrimaryPhoto (): string {
         return this.primaryPhoto;
     }
 
-    public getPrice(): number {
+    public getPrice (): number {
         return this.price;
     }
 
-    public getTotalPrice(): number {
+    public getTotalPrice (): number {
         return this.total;
     }
 
-    public getTax(): number {
+    public getTax (): number {
         return this.tax;
     }
 
-    public getQuantity(): number {
+    public getQuantity (): number {
         return this.quantity;
     }
 }

@@ -17,8 +17,7 @@ export const HANDLER: APIGatewayProxyHandler = async (event) => {
     const MODEL: Model = Model.createModel();
     console.log("Model created");
     
-    const RESULT: boolean = await MODEL.updateCart(TOKEN, PRODUCT_ID, QUANTITY);
-    console.log(RESULT);
-    return RESULT ? response(200, "success") : response(400, "failure");
-
+    return await MODEL.updateCart(TOKEN, PRODUCT_ID, QUANTITY)
+        .then((result: boolean) => result ? response(200, "success"):response(400, "failure"))
+        .catch((err: Error) => response(400, err.message));
 }
