@@ -38,22 +38,16 @@ export class Model {
 
     public async getCart (token: string): Promise<CartWithDetails>{
         const CART: Cart = await this.getCartFromPersistence(token);
-        console.log("getCart CART: ", CART);
 
         const PRODUCTS: Map<string, number> = CART.getProducts();
 
         console.log(PRODUCTS);
         const ARRAY_PROMISE: Array<Promise<any>> = new Array<Promise<any>>();
         Object.keys(PRODUCTS).forEach(key => {
-            console.log("sto iterando");
             ARRAY_PROMISE.push(this.productsService.getProductInfo(key));
         });
-        console.log("getCart model ARRAY_PROMISE: ", ARRAY_PROMISE);
 
         const ARRAY_TMP: Array<any> = await Promise.all(ARRAY_PROMISE);
-
-        console.log("getCart model ARRAY_PROMISE after await: ", ARRAY_PROMISE);
-        console.log("getCart model ARRAY_TMP: ", ARRAY_TMP);
 
         const CART_EXPANDED: CartWithDetails = new CartWithDetails(CART.getId());
         ARRAY_TMP.forEach((item) => {
@@ -137,6 +131,6 @@ export class Model {
         const ID: string = await this.usersService.getUsername(token);
         if(ID == null)
             throw new Error("invalid token");
-        return null;
+        return ID;
     }
 }

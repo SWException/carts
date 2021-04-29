@@ -4,9 +4,7 @@ import { Persistence } from "./persistence";
 export class DbMock implements Persistence {
 
     private static readonly CART_FAKE: Map<string, number> = new Map([
-        ["aaa", 2],
-        ["bbb", 3],
-        ["ccc", 1]
+        ["aaa", 2]
     ])
 
     public async getItem (id: string): Promise<Cart> {
