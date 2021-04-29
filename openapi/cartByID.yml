@@ -61,6 +61,12 @@ patch:
       schema:
         type: string
       required: false
+    - in: path
+      name: id
+      description: id del prodotto da modificare
+      schema:
+        type: string
+      required: true
   requestBody:
     required: true
     content:
