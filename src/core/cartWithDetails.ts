@@ -5,13 +5,14 @@ export class CartWithDetails {
     private readonly products: Array<Product>;
     private total: number;
     private tax: number;
-    private itemCount = 0;
+    private itemCount: number;
 
     constructor (id: string) {
         this.id = id;
         this.products = new Array<Product>();
         this.total = 0;
         this.tax = 0;
+        this.itemCount = 0;
     }
 
     public getId (): string {

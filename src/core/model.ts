@@ -41,21 +41,19 @@ export class Model {
 
         const PRODUCTS: Map<string, number> = CART.getProducts();
 
-        console.log(PRODUCTS);
         const ARRAY_PROMISE: Array<Promise<any>> = new Array<Promise<any>>();
         Object.keys(PRODUCTS).forEach(key => {
             ARRAY_PROMISE.push(this.productsService.getProductInfo(key));
         });
-
+        
         const ARRAY_TMP: Array<any> = await Promise.all(ARRAY_PROMISE);
 
         const CART_EXPANDED: CartWithDetails = new CartWithDetails(CART.getId());
-        ARRAY_TMP.forEach((item) => {
-            const PRODUCT: Product = new Product(item["id"], item["name"], item["primaryPhoto"],
-                item["price"], item["tax"], PRODUCTS[item["id"]]);
+        await ARRAY_TMP.forEach((item) => {
+            const PRODUCT: Product = new Product(item.id, item.name, item.primaryPhoto,
+                Number(item.price), Number(item.tax), Number(PRODUCTS[item.id]));
             CART_EXPANDED.addProduct(PRODUCT);
         });
-        
         return CART_EXPANDED;
     }
 
