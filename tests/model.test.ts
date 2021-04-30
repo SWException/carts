@@ -23,7 +23,11 @@ test('getCart null', async () => {
 
 
 test('getCart', async () => {
-    await MODEL.addToCart("1", "1", 2, false);
+    const RES = await MODEL.getCart("1", false);
+    expect(RES.cart).toMatchSchema(CART_SCHEMA);
+});
+
+test('getCart with error stock', async () => {
     const RES = await MODEL.getCart("1", false);
     expect(RES.cart).toMatchSchema(CART_SCHEMA);
 });
@@ -46,6 +50,9 @@ test('getCart guest', async()=>{
     const RES = await MODEL.getCart(null, true);
     expect(RES.cart).toMatchSchema(CART_SCHEMA);
 
+    const RES1 = await MODEL.getCart("1", true);
+    expect(RES1.cart).toMatchSchema(CART_SCHEMA);
+
 });
 
 
@@ -55,13 +62,12 @@ test("deleteCart", async () => {
 });
 
 test("addToCart", async () => {
-    let res = await MODEL.addToCart("1", "1", 2, false);
+    let res = await MODEL.addToCart("1", "test_product", 1, false);
     expect(res).toBe(true);
-    res = await MODEL.addToCart("1", "1", 1, false);
-    expect(res).toBe(true);
+    res = await MODEL.addToCart("1", "test_product", 20, false);
+    expect(res).toBe(false);
+   
 });
-
-
 
 
 test("removeFromCart", async () => {
@@ -75,11 +81,6 @@ test("authCart", async () => {
 });
 
 
-
-test("getCart guest no token", async () => {
-    const RES = await MODEL.getCart("1", true);
-    expect(RES.cart).toMatchSchema(CART_SCHEMA);
-});
 
 test("error deleteCart", async () => {
     await expect(MODEL.deleteCart(null, false)).rejects.toThrow(Error);

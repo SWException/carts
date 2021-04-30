@@ -11,18 +11,39 @@ export class ProductsMock implements Products {
         tax: 22,
         show: true,
         showHome: false,
-        stock: 100,
+        stock: 10,
         primaryPhoto: "https://www.google.it",
-        quantity: 0
+    };
+
+
+    private static readonly PRODUCT2 = {
+        id: "product_2",
+        name: "product mock 2",
+        description: "this is a fake product",
+        images: ["url1", "url2"],
+        category: "cat1",
+        price: 23.5,
+        tax: 22,
+        show: true,
+        showHome: false,
+        stock: 10,
+        primaryPhoto: "https://www.google.it",
     };
 
     public async getProductInfo (id: string): Promise<any> {
-        if(id)
+        if(id=="test_product")
             return ProductsMock.PRODUCT;
+        if(id=="product_2")
+            return ProductsMock.PRODUCT2
         return null;
     }
 
     public async checkQuantity (_id: string, _quantity: number): Promise<boolean> {
-        return true;
+        if(_id = "test_product")
+            if (ProductsMock.PRODUCT.stock >= _quantity) return true;
+        else 
+             if (ProductsMock.PRODUCT2.stock >= _quantity) return true;
+             
+        else return false;
     }
 }
