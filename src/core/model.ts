@@ -45,8 +45,7 @@ export class Model {
     public async getCart (token: string, isGuest: boolean): 
         Promise<{cart: CartWithDetails, modified: boolean}>{
 
-        const ID: string = token;
-        let cart: Cart = await this.getCartFromPersistence(ID, isGuest);
+        let cart: Cart = await this.getCartFromPersistence(token, isGuest);
        
         const PRODUCTS: Map<string, number> = cart.getProducts();
 
@@ -59,17 +58,23 @@ export class Model {
 
         const CART_EXPANDED: CartWithDetails = new CartWithDetails(cart.getId());
         let flagModified = false;
+       
         ARRAY_TMP.forEach((item) => {
-            if(item.quantity >= PRODUCTS[item.id]) { // check quantity
+           if(item.stock >= PRODUCTS[item.id]) { // check quantity
                 const PRODUCT: Product = new Product(item.id, item.name, item.primaryPhoto,
                     item.price,item.tax, PRODUCTS[item.id]);
                 CART_EXPANDED.addProduct(PRODUCT);
             }
             else {
-                if(item.quantity > 0)
-                    cart.updateCart(item.id, item.quantity);
+                if(item.stock > 0){
+                    const PRODUCT: Product = new Product(item.id, item.name, item.primaryPhoto,
+                        item.price,item.tax, item.stock);
+                    CART_EXPANDED.addProduct(PRODUCT);
+                    cart.updateCart(item.id, item.stock);
+                }   
                 else
                     cart.removeFromCart(item.id);
+
                 flagModified = true;
             }
         });

@@ -29,9 +29,8 @@ test('getCart', async () => {
 });
 
 
-test('getCart registrato ma con ID null', async () => {
-    await MODEL.addToCart(null, "1", 2, false);
-    await expect(MODEL.getCart("1", false)).rejects.toThrow(Error);
+test('addToCart registrato ma con ID null', async () => {
+    await expect(MODEL.addToCart(null, "1", 2, false)).rejects.toThrow(Error);
 
 });
 
