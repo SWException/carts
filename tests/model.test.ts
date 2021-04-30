@@ -39,8 +39,9 @@ test("removeFromCart", async () => {
     expect(RES).toBe(true);
 });
 
-test("error getCart", async () => {
-    await expect(MODEL.getCart(null, false)).rejects.toThrow(Error);
+test("getCart guest no token", async () => {
+    const RES = await MODEL.getCart("1", true);
+    expect(RES).toMatchSchema(CART_SCHEMA);
 });
 
 test("error deleteCart", async () => {
