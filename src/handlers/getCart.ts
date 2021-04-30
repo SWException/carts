@@ -4,11 +4,14 @@ import response from 'src/handlers/apiResponse';
 import { Model } from "../core/model";
 
 export const HANDLER: APIGatewayProxyHandler = async (event) => {
-    const TOKEN: string = event.headers?.Authorization;
-    if(TOKEN == null)
-        return response(400, "invalid token");
+    let token: string = event.headers?.Authorization;
+    let isGuest = false;
+    if(token == null) {
+        token = event.headers?.guestToken;
+        isGuest = true;
+    }
     const MODEL: Model = Model.createModel();
-    return await MODEL.getCart(TOKEN)
+    return await MODEL.getCart(token, isGuest)
         .then((cart: CartWithDetails) => 
             response(200, "success", cart))
         .catch((err: Error) =>  response(400, err.message));

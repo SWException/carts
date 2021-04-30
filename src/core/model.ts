@@ -10,6 +10,7 @@ import { UsersMock } from "src/repository/usersMock";
 import { Cart } from "./cart";
 import { CartWithDetails } from "./cartWithDetails";
 import { Product } from "./product";
+import {v4 as uuidv4} from 'uuid';
 
 export class Model {
     private readonly persistence: Persistence;
@@ -22,8 +23,8 @@ export class Model {
         this.usersService = usersService;
     }
 
-    private async getCartFromPersistence (token: string): Promise<Cart>{
-        const ID: string = await this.tokenToID(token);
+    private async getCartFromPersistence (token: string, isGuest: boolean): Promise<Cart>{
+        const ID: string = isGuest ? token : await this.tokenToID(token);
         const CART: Cart = await this.persistence.getItem(ID);
         return CART ? CART : new Cart(ID);
     }
@@ -36,10 +37,15 @@ export class Model {
         return new Model(new DbMock(), new ProductsMock(), new UsersMock());
     }
 
-    public async getCart (token: string): Promise<CartWithDetails>{
-        const CART: Cart = await this.getCartFromPersistence(token);
+    public async getCart (token: string, isGuest: boolean): Promise<CartWithDetails>{
+        const ID: string = token ? token : this.generateGuestId();
+        let cart: Cart = await this.getCartFromPersistence(ID, isGuest);
+        if(cart == null) {
+            cart = new Cart(ID);
+            this.persistence.updateCart(cart)
+        }
 
-        const PRODUCTS: Map<string, number> = CART.getProducts();
+        const PRODUCTS: Map<string, number> = cart.getProducts();
 
         const ARRAY_PROMISE: Array<Promise<any>> = new Array<Promise<any>>();
         Object.keys(PRODUCTS).forEach(key => {
@@ -48,7 +54,7 @@ export class Model {
         
         const ARRAY_TMP: Array<any> = await Promise.all(ARRAY_PROMISE);
 
-        const CART_EXPANDED: CartWithDetails = new CartWithDetails(CART.getId());
+        const CART_EXPANDED: CartWithDetails = new CartWithDetails(cart.getId());
         ARRAY_TMP.forEach((item) => {
             if(item.quantity >= PRODUCTS[item.id]) { // check quantity
                 const PRODUCT: Product = new Product(item.id, item.name, item.primaryPhoto,
@@ -57,27 +63,25 @@ export class Model {
             }
             else {
                 if(item.quantity > 0)
-                    CART.updateCart(item.id, item.quantity)
+                    cart.updateCart(item.id, item.quantity)
                 else
-                    CART.removeFromCart(item.id);
-                this.persistence.updateCart(CART);
+                    cart.removeFromCart(item.id);
+                this.persistence.updateCart(cart);
             }
         });
 
         return CART_EXPANDED;
     }
 
-    public async deleteCart (token: string): Promise<boolean> {
-        const ID: string = await this.tokenToID(token);
+    public async deleteCart (token: string, isGuest: boolean): Promise<boolean> {
+        const ID: string = isGuest ? token : await this.tokenToID(token);
         return this.persistence.deleteCart(ID);
     }
 
-    public async addToCart (token: string, productId: string, quantity: number): Promise<boolean> {
-        const CART: Cart = await this.getCartFromPersistence(token).catch((err) => {
-            console.log(err.message);
-            return null;
-        });
-        console.log("CART: ", CART);
+    public async addToCart (token: string, productId: string, quantity: number,
+        isGuest: boolean): Promise<boolean> {
+
+        const CART: Cart = await this.getCartFromPersistence(token, isGuest);
         
         if(CART == null) {
             console.log("Creating new cart");
@@ -85,7 +89,10 @@ export class Model {
                 await this.productsService.checkQuantity(productId, quantity);
             if(!AVAILABLE)
                 return false;
-            const CART_NEW: Cart = new Cart(await this.tokenToID(token), new Map<string, number>());
+            let id: string = isGuest ? token : await this.tokenToID(token);
+            if(id == null)
+                id = this.generateGuestId();
+            const CART_NEW: Cart = new Cart(id, new Map<string, number>());
             CART_NEW.addToCart(productId, quantity);
             return this.persistence.updateCart(CART_NEW);
         }
@@ -100,13 +107,11 @@ export class Model {
         }
     }
 
-    public async updateCart (token: string, productId: string, quantity: number): Promise<boolean> {
+    public async updateCart (token: string, productId: string, quantity: number,
+        isGuest: boolean): Promise<boolean> {
         // Uguale ad addToCart, ma non somma la quantità a quella esistente, la sostituisce
-        const CART: Cart = await this.getCartFromPersistence(token).catch((err) => {
-            console.log(err.message);
-            return null;
-        });
-        console.log("CART: ", CART);
+        const CART: Cart = await this.getCartFromPersistence(token, isGuest);
+        console.log("cart: ", CART);
         console.log("NEW QUANTITY: ", quantity);
         
         const AVAILABLE: boolean = await this.productsService.checkQuantity(productId, quantity);
@@ -126,8 +131,9 @@ export class Model {
         }
     }
 
-    public async removeFromCart (token: string, productId: string): Promise<boolean> {
-        const CART: Cart = await this.getCartFromPersistence(token);
+    public async removeFromCart (token: string, productId: string,
+        isGuest: boolean): Promise<boolean> {
+        const CART: Cart = await this.getCartFromPersistence(token, isGuest);
         if(CART.contains(productId)) {
             CART.removeFromCart(productId);
             return this.persistence.updateCart(CART);
@@ -140,5 +146,9 @@ export class Model {
         if(ID == null)
             throw new Error("invalid token");
         return ID;
+    }
+
+    private generateGuestId (): string {
+        return "guest_"+uuidv4();
     }
 }
