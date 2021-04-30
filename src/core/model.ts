@@ -141,6 +141,25 @@ export class Model {
         return true;
     }
 
+    public async authCart (customerToken: string, guestToken: string): Promise<boolean> {
+        const CART_GUEST: Cart = await this.persistence.getItem(guestToken);
+        const PRODUCTS: Map<string, number> = CART_GUEST.getProducts();
+        const USERNAME: string = await this.tokenToID(customerToken);
+        const CART_CUSTOMER: Cart = await this.persistence.getItem(USERNAME);
+        if(CART_CUSTOMER) { // merge con un eventuale carrello già presente per quell'utente
+            const PRODUCTS_CUSTOMER: Map<string, number> = CART_CUSTOMER.getProducts();
+            Object.keys(PRODUCTS_CUSTOMER).forEach(key => {
+                const TMP: number = (PRODUCTS[key] ? PRODUCTS[key] : 0) + PRODUCTS_CUSTOMER[key];
+                PRODUCTS.set(key, TMP);
+            });
+        }
+        const CART_NEW = new Cart(USERNAME, PRODUCTS);
+        const DELETE: boolean = await this.persistence.deleteCart(guestToken);
+        if(!DELETE)
+            return false;
+        return await this.persistence.updateCart(CART_NEW);
+    }
+
     private async tokenToID (token: string): Promise<string>{
         const ID: string = await this.usersService.getUsername(token);
         if(ID == null)

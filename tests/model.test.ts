@@ -39,6 +39,11 @@ test("removeFromCart", async () => {
     expect(RES).toBe(true);
 });
 
+test("authCart", async () => {
+    const RES = await MODEL.authCart("1", "guest_1");
+    expect(RES).toBe(true);
+});
+
 test("getCart guest no token", async () => {
     const RES = await MODEL.getCart("1", true);
     expect(RES).toMatchSchema(CART_SCHEMA);

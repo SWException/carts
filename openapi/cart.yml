@@ -136,3 +136,42 @@ post:
               status: "error",
               message: "errore o l'articolo non era presente nella quantità richiesta",
             }
+
+patch:
+  summary: "authenticate cart"
+  description: "pass a guest cart to an authenticated cart"
+  operationId: "authCart"
+  tags:
+    - cart
+  parameters:
+    - in: header
+      name: Authorization
+      description: token JWT
+      schema:
+        type: string
+      required: true
+    - in: header
+      name: guestToken
+      schema:
+        type: string
+      required: true
+  responses:
+    200:
+      description: "cart authenticated"
+      content:
+        application/json:
+          schema:
+            $ref: "../schemas/response.json#/response"
+          example:
+            { status: "success", message: "success" }
+    400:
+      description: product not added to cart"
+      content:
+        application/json:
+          schema:
+            $ref: "../schemas/response.json#/response"
+          example:
+            {
+              status: "error",
+              message: "failure",
+            }
