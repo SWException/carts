@@ -15,28 +15,38 @@ test('schema', () => {
     expect(CART_SCHEMA).toBeValidSchema();
 });
 
-test('getCart null', async () => {
-    const RES = await MODEL.getCart("100", false);
-    expect(RES.cart).toMatchSchema(CART_SCHEMA);
-});
 
 
 
 test('getCart', async () => {
     const RES = await MODEL.getCart("1", false);
     expect(RES.cart).toMatchSchema(CART_SCHEMA);
+    const RES2 = await MODEL.getCart("guest_3", false);
+    expect(RES2.cart).toMatchSchema(CART_SCHEMA);
+    const RES3 = await MODEL.getCart("100", false);
+    expect(RES3.cart).toMatchSchema(CART_SCHEMA);
+    const RES4 = await MODEL.getCart(null, true);
+    expect(RES4.cart).toMatchSchema(CART_SCHEMA);
+    const RES5 = await MODEL.getCart("1", true);
+    expect(RES5.cart).toMatchSchema(CART_SCHEMA);
+    
 });
+
 
 test('getCart with error stock', async () => {
     const RES = await MODEL.getCart("1", false);
     expect(RES.cart).toMatchSchema(CART_SCHEMA);
 });
 
-
-test('addToCart registrato ma con ID null', async () => {
+test("addToCart", async () => {
+    let res = await MODEL.addToCart("1", "test_product", 1, false);
+    expect(res).toBe(true);
+    res = await MODEL.addToCart("1", "test_product", 20, false);
+    expect(res).toBe(false);
     await expect(MODEL.addToCart(null, "1", 2, false)).rejects.toThrow(Error);
 
 });
+
 
 
 test('updateToCart', async()=>{
@@ -46,14 +56,6 @@ test('updateToCart', async()=>{
 
 });
 
-test('getCart guest', async()=>{
-    const RES = await MODEL.getCart(null, true);
-    expect(RES.cart).toMatchSchema(CART_SCHEMA);
-
-    const RES1 = await MODEL.getCart("1", true);
-    expect(RES1.cart).toMatchSchema(CART_SCHEMA);
-
-});
 
 
 test("deleteCart", async () => {
@@ -61,17 +63,11 @@ test("deleteCart", async () => {
     expect(RES).toBe(true);
 });
 
-test("addToCart", async () => {
-    let res = await MODEL.addToCart("1", "test_product", 1, false);
-    expect(res).toBe(true);
-    res = await MODEL.addToCart("1", "test_product", 20, false);
-    expect(res).toBe(false);
-   
-});
+
 
 
 test("removeFromCart", async () => {
-    const RES = await MODEL.removeFromCart("1", "1", false);
+    const RES = await MODEL.removeFromCart("guest_1", "test_product", false);
     expect(RES).toBe(true);
 });
 

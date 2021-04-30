@@ -3,16 +3,16 @@ import { Persistence } from "./persistence";
 
 export class DbMock implements Persistence {
     public async getItem (id: string): Promise<Cart> {
-        if(id=="1") {
+        if(id=="pippo") {
             const CART_FAKE: Map<string, number> = new Map<string, number>();
             CART_FAKE.set("test_product", 2);
             CART_FAKE.set("product_2", 50);
-            return new Cart("user123", CART_FAKE);
+            return new Cart("pippo", CART_FAKE);
         }
         else  if(id=="guest_1") {
             const CART_FAKE: Map<string, number> = new Map<string, number>();
-            CART_FAKE.set("test_product", 3);
-            return new Cart("user123", CART_FAKE);
+            CART_FAKE.set("test_product", 50);
+            return new Cart("guest_1", CART_FAKE);
         }
            else  return null;
 
