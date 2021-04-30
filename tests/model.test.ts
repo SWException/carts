@@ -18,7 +18,7 @@ test('schema', () => {
 test('getCart', async () => {
     await MODEL.addToCart("1", "1", 2, false);
     const RES = await MODEL.getCart("1", false);
-    expect(RES).toMatchSchema(CART_SCHEMA);
+    expect(RES.cart).toMatchSchema(CART_SCHEMA);
 });
 
 test("deleteCart", async () => {
@@ -46,7 +46,7 @@ test("authCart", async () => {
 
 test("getCart guest no token", async () => {
     const RES = await MODEL.getCart("1", true);
-    expect(RES).toMatchSchema(CART_SCHEMA);
+    expect(RES.cart).toMatchSchema(CART_SCHEMA);
 });
 
 test("error deleteCart", async () => {

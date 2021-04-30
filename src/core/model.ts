@@ -37,12 +37,14 @@ export class Model {
         return new Model(new DbMock(), new ProductsMock(), new UsersMock());
     }
 
-    public async getCart (token: string, isGuest: boolean): Promise<CartWithDetails>{
+    public async getCart (token: string, isGuest: boolean): 
+        Promise<{cart: CartWithDetails, modified: boolean}>{
+
         const ID: string = token ? token : this.generateGuestId();
         let cart: Cart = await this.getCartFromPersistence(ID, isGuest);
         if(cart == null) {
             cart = new Cart(ID);
-            this.persistence.updateCart(cart)
+            await this.persistence.updateCart(cart)
         }
 
         const PRODUCTS: Map<string, number> = cart.getProducts();
@@ -55,6 +57,7 @@ export class Model {
         const ARRAY_TMP: Array<any> = await Promise.all(ARRAY_PROMISE);
 
         const CART_EXPANDED: CartWithDetails = new CartWithDetails(cart.getId());
+        let flagModified = false;
         ARRAY_TMP.forEach((item) => {
             if(item.quantity >= PRODUCTS[item.id]) { // check quantity
                 const PRODUCT: Product = new Product(item.id, item.name, item.primaryPhoto,
@@ -63,14 +66,18 @@ export class Model {
             }
             else {
                 if(item.quantity > 0)
-                    cart.updateCart(item.id, item.quantity)
+                    cart.updateCart(item.id, item.quantity);
                 else
                     cart.removeFromCart(item.id);
-                this.persistence.updateCart(cart);
+                flagModified = true;
             }
         });
-
-        return CART_EXPANDED;
+        if(flagModified) 
+            await this.persistence.updateCart(cart);
+        return {
+            cart: CART_EXPANDED,
+            modified: flagModified
+        };
     }
 
     public async deleteCart (token: string, isGuest: boolean): Promise<boolean> {

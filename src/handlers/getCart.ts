@@ -12,7 +12,7 @@ export const HANDLER: APIGatewayProxyHandler = async (event) => {
     }
     const MODEL: Model = Model.createModel();
     return await MODEL.getCart(token, isGuest)
-        .then((cart: CartWithDetails) => 
-            response(200, "success", cart))
+        .then((result: {cart: CartWithDetails, modified: boolean}) => 
+            response(200, (result.modified ? "something is missing":"success"), result.cart))
         .catch((err: Error) =>  response(400, err.message));
 }
