@@ -20,7 +20,7 @@ export class Dynamo implements Persistence {
 
         const PROD: Map<string, number> = new Map<string, number>();
         
-        DATA.Item.products.forEach(product => {
+        DATA.Item?.products?.forEach(product => {
             PROD[product.productId] = product.quantity;
         });
 
