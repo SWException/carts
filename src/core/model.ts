@@ -49,11 +49,21 @@ export class Model {
         const ARRAY_TMP: Array<any> = await Promise.all(ARRAY_PROMISE);
 
         const CART_EXPANDED: CartWithDetails = new CartWithDetails(CART.getId());
-        await ARRAY_TMP.forEach((item) => {
-            const PRODUCT: Product = new Product(item.id, item.name, item.primaryPhoto,
-                Number(item.price), Number(item.tax), Number(PRODUCTS[item.id]));
-            CART_EXPANDED.addProduct(PRODUCT);
+        ARRAY_TMP.forEach((item) => {
+            if(item.quantity >= PRODUCTS[item.id]) { // check quantity
+                const PRODUCT: Product = new Product(item.id, item.name, item.primaryPhoto,
+                    item.price,item.tax, PRODUCTS[item.id]);
+                CART_EXPANDED.addProduct(PRODUCT);
+            }
+            else {
+                if(item.quantity > 0)
+                    CART.updateCart(item.id, item.quantity)
+                else
+                    CART.removeFromCart(item.id);
+                this.persistence.updateCart(CART);
+            }
         });
+
         return CART_EXPANDED;
     }
 
