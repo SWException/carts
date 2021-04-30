@@ -15,11 +15,40 @@ test('schema', () => {
     expect(CART_SCHEMA).toBeValidSchema();
 });
 
+test('getCart null', async () => {
+    const RES = await MODEL.getCart("100", false);
+    expect(RES.cart).toMatchSchema(CART_SCHEMA);
+});
+
+
+
 test('getCart', async () => {
     await MODEL.addToCart("1", "1", 2, false);
     const RES = await MODEL.getCart("1", false);
     expect(RES.cart).toMatchSchema(CART_SCHEMA);
 });
+
+
+test('getCart registrato ma con ID null', async () => {
+    await MODEL.addToCart(null, "1", 2, false);
+    await expect(MODEL.getCart("1", false)).rejects.toThrow(Error);
+
+});
+
+
+test('updateToCart', async()=>{
+    await MODEL.updateCart("1","1",2,false);
+    const RES = await MODEL.getCart("1", false);
+    expect(RES.cart).toMatchSchema(CART_SCHEMA);
+
+});
+
+test('getCart guest', async()=>{
+    const RES = await MODEL.getCart(null, true);
+    expect(RES.cart).toMatchSchema(CART_SCHEMA);
+
+});
+
 
 test("deleteCart", async () => {
     const RES = await MODEL.deleteCart("1", false);
@@ -31,8 +60,10 @@ test("addToCart", async () => {
     expect(res).toBe(true);
     res = await MODEL.addToCart("1", "1", 1, false);
     expect(res).toBe(true);
-
 });
+
+
+
 
 test("removeFromCart", async () => {
     const RES = await MODEL.removeFromCart("1", "1", false);
@@ -43,6 +74,8 @@ test("authCart", async () => {
     const RES = await MODEL.authCart("1", "guest_1");
     expect(RES).toBe(true);
 });
+
+
 
 test("getCart guest no token", async () => {
     const RES = await MODEL.getCart("1", true);

@@ -13,7 +13,7 @@ export class ProductsMock implements Products {
         showHome: false,
         stock: 100,
         primaryPhoto: "https://www.google.it",
-        quantity: 4
+        quantity: 0
     };
 
     public async getProductInfo (id: string): Promise<any> {
