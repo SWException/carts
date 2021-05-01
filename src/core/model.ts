@@ -54,9 +54,10 @@ export class Model {
         let cart: Cart = await this.getCartFromPersistence(token, isGuest);
        
         const PRODUCTS: Map<string, number> = cart.getProducts();
-
+     
         const ARRAY_PROMISE: Array<Promise<any>> = new Array<Promise<any>>();
-        Object.keys(PRODUCTS).forEach(key => {
+        const KEYS = Array.from(PRODUCTS.keys());
+        KEYS.forEach(key => {
             ARRAY_PROMISE.push(this.productsService.getProductInfo(key));
         });
         
@@ -64,11 +65,13 @@ export class Model {
 
         const CART_EXPANDED: CartWithDetails = new CartWithDetails(cart.getId());
         let flagModified = false;
-       
-        ARRAY_TMP.forEach((item) => {
-           if(item.stock >= PRODUCTS[item.id]) { // check quantity
+
+        
+
+        ARRAY_TMP.forEach(item => {
+           if(item.stock >= PRODUCTS.get(item.id)) { // check quantity
                 const PRODUCT: Product = new Product(item.id, item.name, item.primaryPhoto,
-                    item.price,item.tax, PRODUCTS[item.id]);
+                    item.price,item.tax, PRODUCTS.get(item.id));
                 CART_EXPANDED.addProduct(PRODUCT);
             }
             else {
