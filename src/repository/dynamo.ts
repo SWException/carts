@@ -35,7 +35,9 @@ export class Dynamo implements Persistence {
             TableName: Dynamo.TABLE_CARTS
         };
 
-        await this.DOCUMENT_CLIENT.delete(PARAMS).promise();
+        await this.DOCUMENT_CLIENT.delete(PARAMS).promise().catch(
+            () => { return false; }
+        );
         return true;     
     }
 

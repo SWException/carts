@@ -12,6 +12,8 @@ export class DbMock implements Persistence {
         else  if(id == "guest_1") {
             const CART_FAKE: Map<string, number> = new Map<string, number>();
             CART_FAKE.set("test_product", 50);
+            CART_FAKE.set("product_3", 50);
+            
             return new Cart("guest_1", CART_FAKE);
         }
            else  return null;
@@ -19,8 +21,9 @@ export class DbMock implements Persistence {
 
     }
     public async deleteCart (id: string): Promise<boolean> {
-        if(id != null)
+        if(id == "pippo" || id == "guest_1")
             return true;
+        else return false;
     }
     public async updateCart (cart: Cart): Promise<boolean> {
         if(cart != null)

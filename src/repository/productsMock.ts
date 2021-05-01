@@ -30,11 +30,27 @@ export class ProductsMock implements Products {
         primaryPhoto: "https://www.google.it",
     };
 
+    private static readonly PRODUCT3 = {
+        id: "product_3",
+        name: "product mock 3 vuoto",
+        description: "this is a fake product",
+        images: ["url1", "url2"],
+        category: "cat1",
+        price: 23.5,
+        tax: 22,
+        show: true,
+        showHome: false,
+        stock: 0,
+        primaryPhoto: "https://www.google.it",
+    };
+
     public async getProductInfo (id: string): Promise<any> {
         if(id=="test_product")
             return ProductsMock.PRODUCT;
         if(id=="product_2")
             return ProductsMock.PRODUCT2
+        if(id=="product_3")
+            return ProductsMock.PRODUCT3
         return null;
     }
 

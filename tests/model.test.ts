@@ -7,6 +7,7 @@ expect.extend(matchersWithOptions(SCHEMAS, (ajv) => setFormats(ajv)));
 
 const MODEL = Model.createModelTest();
 
+
 const CART_SCHEMA: JSONSchema7 = {
     $ref: "schemas/carts.json#/cart"
 };
@@ -18,10 +19,25 @@ test('schema', () => {
 test('getCart', async () => {
     const RES = await MODEL.getCart("1", false);
     expect(RES.cart).toMatchSchema(CART_SCHEMA);
+    const RESA = await MODEL.getCart("guest_1", false);
+    expect(RESA.cart).toMatchSchema(CART_SCHEMA);
     const RES2 = await MODEL.getCart("guest_3", false);
     expect(RES2.cart).toMatchSchema(CART_SCHEMA);
     const RES3 = await MODEL.getCart("100", false);
     expect(RES3.cart).toMatchSchema(CART_SCHEMA);
+});
+
+
+test('getCart qta non disponibile', async () => {
+    const RES = await MODEL.getCart("guest_1", false);
+    expect(RES.cart).toMatchSchema(CART_SCHEMA);
+   
+});
+
+
+test('test real Model', async () => {
+    const MODEL = Model.createModel();
+    expect(typeof MODEL).toBe("object"); 
 });
 
 test('getCart guest', async () => {
@@ -60,14 +76,30 @@ test("deleteCart", async () => {
     expect(RES).toBe(true);
 });
 
+
+test("deleteCart guest", async () => {
+    const RES = await MODEL.deleteCart("guest_1", true);
+    expect(RES).toBe(true);
+});
+
 test("removeFromCart", async () => { // da sistemare, errore tipo boolean
     const RES  = await MODEL.removeFromCart("guest_1", "test_product", false);
+    expect(RES).toBe(true);
+});
+
+test("removeFromCart prodotto non in carrello", async () => { // da sistemare, errore tipo boolean
+    const RES  = await MODEL.removeFromCart("guest_1", "prodotto_fantasma", false);
     expect(RES).toBe(true);
 });
 
 test("authCart", async () => {
     const RES = await MODEL.authCart("1", "guest_1");
     expect(RES).toBe(true);
+});
+
+test("authCart invalid guest", async () => {
+    const RES = await MODEL.authCart("1", "guest_invalid");
+    expect(RES).toBe(false);
 });
 
 test("error deleteCart", async () => {

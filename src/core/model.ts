@@ -54,38 +54,35 @@ export class Model {
         let cart: Cart = await this.getCartFromPersistence(token, isGuest);
        
         const PRODUCTS: Map<string, number> = cart.getProducts();
-     
         const ARRAY_PROMISE: Array<Promise<any>> = new Array<Promise<any>>();
         const KEYS = Array.from(PRODUCTS.keys());
+
         KEYS.forEach(key => {
             ARRAY_PROMISE.push(this.productsService.getProductInfo(key));
         });
         
         const ARRAY_TMP: Array<any> = await Promise.all(ARRAY_PROMISE);
-
         const CART_EXPANDED: CartWithDetails = new CartWithDetails(cart.getId());
         let flagModified = false;
-
-        
 
         ARRAY_TMP.forEach(item => {
            if(item.stock >= PRODUCTS.get(item.id)) { // check quantity
                 const PRODUCT: Product = new Product(item.id, item.name, item.primaryPhoto,
-                    item.price,item.tax, PRODUCTS.get(item.id));
+                item.price,item.tax, PRODUCTS.get(item.id));
                 CART_EXPANDED.addProduct(PRODUCT);
             }
             else {
                 if(item.stock > 0){
                     const PRODUCT: Product = new Product(item.id, item.name, item.primaryPhoto,
-                        item.price,item.tax, item.stock);
+                    item.price,item.tax, item.stock);
                     CART_EXPANDED.addProduct(PRODUCT);
                     cart.updateCart(item.id, item.stock);
                 }   
                 else
                     cart.removeFromCart(item.id);
-
-                flagModified = true;
-            }
+                
+                flagModified = true; 
+                }
         });
         if(flagModified) 
             await this.persistence.updateCart(cart);
@@ -144,19 +141,18 @@ export class Model {
     }
 
     public async authCart (customerToken: string, guestToken: string): Promise<boolean> {
-        const CART_GUEST: Cart = await this.persistence.getItem(guestToken);
+        const CART_GUEST: Cart = await this.getCartFromPersistence(guestToken, true);
         const PRODUCTS: Map<string, number> = CART_GUEST.getProducts();
         const USERNAME: string = await this.tokenToID(customerToken);
-        const CART_CUSTOMER: Cart = await this.persistence.getItem(USERNAME);
-        console.log(CART_CUSTOMER);
-        if(CART_CUSTOMER) { // merge con un eventuale carrello già presente per quell'utente
-            const PRODUCTS_CUSTOMER: Map<string, number> = CART_CUSTOMER.getProducts();
-            const KEYS = Array.from(PRODUCTS_CUSTOMER.keys());
-            KEYS.forEach(key => {
-                const TMP: number = (PRODUCTS.get(key) ? PRODUCTS.get(key) : 0) + PRODUCTS_CUSTOMER.get(key);
-                PRODUCTS.set(key, TMP);
-            });
-        }
+        const CART_CUSTOMER: Cart = await this.getCartFromPersistence(USERNAME, false);
+ 
+        const PRODUCTS_CUSTOMER: Map<string, number> = CART_CUSTOMER.getProducts();
+        const KEYS = Array.from(PRODUCTS_CUSTOMER.keys());
+        KEYS.forEach(key => {
+            const TMP: number = (PRODUCTS.get(key) ? PRODUCTS.get(key) : 0) + PRODUCTS_CUSTOMER.get(key);
+            PRODUCTS.set(key, TMP);
+        });
+        
         const CART_NEW = new Cart(USERNAME, PRODUCTS);
         const DELETE: boolean = await this.persistence.deleteCart(guestToken);
         if(!DELETE)

@@ -29,7 +29,9 @@ export class Cart {
     }
 
     public getProducts (): Map<string, number> {
-        return this.products;
+        if(this.products)
+            return this.products;
+        else return null;
     }
 
     public getId (): string {
