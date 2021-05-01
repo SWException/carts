@@ -16,8 +16,6 @@ test('schema', () => {
 });
 
 
-
-
 test('getCart', async () => {
     const RES = await MODEL.getCart("1", false);
     expect(RES.cart).toMatchSchema(CART_SCHEMA);
@@ -25,6 +23,9 @@ test('getCart', async () => {
     expect(RES2.cart).toMatchSchema(CART_SCHEMA);
     const RES3 = await MODEL.getCart("100", false);
     expect(RES3.cart).toMatchSchema(CART_SCHEMA);
+});
+
+test('getCart guest', async () => {
     const RES4 = await MODEL.getCart(null, true);
     expect(RES4.cart).toMatchSchema(CART_SCHEMA);
     const RES5 = await MODEL.getCart("1", true);
@@ -47,27 +48,24 @@ test("addToCart", async () => {
 
 });
 
-
-
 test('updateToCart', async()=>{
-    await MODEL.updateCart("1","1",2,false);
-    const RES = await MODEL.getCart("1", false);
-    expect(RES.cart).toMatchSchema(CART_SCHEMA);
-
+    const RES = await MODEL.updateCart("1","1",2,false);
+    expect(RES).toBe(true);
 });
 
-
+test('updateToCart error', async()=>{
+    await MODEL.updateCart("1","test_product",50,false);
+    const RES = await MODEL.getCart("1", false);
+    expect(RES.cart).toMatchSchema(CART_SCHEMA);
+});
 
 test("deleteCart", async () => {
     const RES = await MODEL.deleteCart("1", false);
     expect(RES).toBe(true);
 });
 
-
-
-
-test("removeFromCart", async () => {
-    const RES = await MODEL.removeFromCart("guest_1", "test_product", false);
+test("removeFromCart", async () => { // da sistemare, errore tipo boolean
+    const RES  = await MODEL.removeFromCart("guest_1", "test_product", false);
     expect(RES).toBe(true);
 });
 
@@ -75,7 +73,6 @@ test("authCart", async () => {
     const RES = await MODEL.authCart("1", "guest_1");
     expect(RES).toBe(true);
 });
-
 
 
 test("error deleteCart", async () => {

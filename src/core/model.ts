@@ -126,6 +126,7 @@ export class Model {
     public async removeFromCart (token: string, productId: string,
         isGuest: boolean): Promise<boolean> {
         const CART: Cart = await this.getCartFromPersistence(token, isGuest);
+        
         if(CART.contains(productId)) {
             CART.removeFromCart(productId);
             return this.persistence.updateCart(CART);
