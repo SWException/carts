@@ -21,7 +21,7 @@ export class Dynamo implements Persistence {
         const PROD: Map<string, number> = new Map<string, number>();
         
         DATA.Item?.products?.forEach(product => {
-            PROD[product.productId] = product.quantity;
+            PROD.set(product.productId, product.quantity);
         });
 
         return DATA.Item ? new Cart(DATA.Item.id, PROD) : null;
@@ -45,11 +45,17 @@ export class Dynamo implements Persistence {
         const PRODUCTS: Map<string, number> = cart.getProducts();
         const VALUE: Array<any> = new Array<any>();
         console.log("PRODUCTS update dynamo:", PRODUCTS);
+
+        const KEYS = Array.from(PRODUCTS.keys())
+
+        console.log({KEYS});
         
-        Object.keys(PRODUCTS).forEach((key) => {
+        KEYS.forEach((key) => {
+            console.log("forEach PRODUCTS. Current key: ", key);
+            
             VALUE.push({
                 "productId": key,
-                "quantity": PRODUCTS[key]
+                "quantity": PRODUCTS.get(key)
             });
         });
         console.log("Value update dynamo: ", VALUE);

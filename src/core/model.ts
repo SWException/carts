@@ -51,9 +51,9 @@ export class Model {
     public async getCart (token: string, isGuest: boolean): 
         Promise<{cart: CartWithDetails, modified: boolean}>{
 
-        let cart: Cart = await this.getCartFromPersistence(token, isGuest);
+        const CART: Cart = await this.getCartFromPersistence(token, isGuest);
        
-        const PRODUCTS: Map<string, number> = cart.getProducts();
+        const PRODUCTS: Map<string, number> = CART.getProducts();
         const ARRAY_PROMISE: Array<Promise<any>> = new Array<Promise<any>>();
         const KEYS = Array.from(PRODUCTS.keys());
 
@@ -62,30 +62,30 @@ export class Model {
         });
         
         const ARRAY_TMP: Array<any> = await Promise.all(ARRAY_PROMISE);
-        const CART_EXPANDED: CartWithDetails = new CartWithDetails(cart.getId());
+        const CART_EXPANDED: CartWithDetails = new CartWithDetails(CART.getId());
         let flagModified = false;
 
         ARRAY_TMP.forEach(item => {
-           if(item.stock >= PRODUCTS.get(item.id)) { // check quantity
+            if(item.stock >= PRODUCTS.get(item.id)) { // check quantity
                 const PRODUCT: Product = new Product(item.id, item.name, item.primaryPhoto,
-                item.price,item.tax, PRODUCTS.get(item.id));
+                    item.price,item.tax, PRODUCTS.get(item.id));
                 CART_EXPANDED.addProduct(PRODUCT);
             }
             else {
                 if(item.stock > 0){
                     const PRODUCT: Product = new Product(item.id, item.name, item.primaryPhoto,
-                    item.price,item.tax, item.stock);
+                        item.price,item.tax, item.stock);
                     CART_EXPANDED.addProduct(PRODUCT);
-                    cart.updateCart(item.id, item.stock);
+                    CART.updateCart(item.id, item.stock);
                 }   
                 else
-                    cart.removeFromCart(item.id);
+                    CART.removeFromCart(item.id);
                 
                 flagModified = true; 
-                }
+            }
         });
         if(flagModified) 
-            await this.persistence.updateCart(cart);
+            await this.persistence.updateCart(CART);
         return {
             cart: CART_EXPANDED,
             modified: flagModified
@@ -149,7 +149,8 @@ export class Model {
         const PRODUCTS_CUSTOMER: Map<string, number> = CART_CUSTOMER.getProducts();
         const KEYS = Array.from(PRODUCTS_CUSTOMER.keys());
         KEYS.forEach(key => {
-            const TMP: number = (PRODUCTS.get(key) ? PRODUCTS.get(key) : 0) + PRODUCTS_CUSTOMER.get(key);
+            const TMP: number = (PRODUCTS.get(key) ? 
+                PRODUCTS.get(key) : 0) + PRODUCTS_CUSTOMER.get(key);
             PRODUCTS.set(key, TMP);
         });
         

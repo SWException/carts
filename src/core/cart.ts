@@ -8,10 +8,17 @@ export class Cart {
     }
 
     public addToCart (productId: string, quantity: number): void{
-        if(this.products.get(productId) == null)
-            this.products.set(productId,0);
-        const QTA = this.products.get(productId);
-        this.products.set(productId, quantity+QTA);
+        console.log("CART addToCart. Products before add ", this.products);
+        
+        if(this.products.get(productId) != null && this.products.get(productId) > 0){
+            const QTA = this.products.get(productId);
+            this.products.set(productId, quantity + QTA);
+        }
+        else{
+            console.log("Aggiungo il nuovo prodotto");
+            this.products.set(productId, quantity);
+        }
+        console.log("CART addToCart. Products after add ", this.products);
     }
 
     public updateCart (productId: string, quantity: number): void{
@@ -42,7 +49,7 @@ export class Cart {
         if(this.products.size > 0)
             return this.products.get(id) ? this.products.get(id) : 0;
         return 0;
-    }                                                                                                                         
+    }
 
     public isEmpty (): boolean {
         return this.products.size == 0;
