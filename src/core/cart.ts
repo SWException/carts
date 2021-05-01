@@ -36,7 +36,9 @@ export class Cart {
     }
 
     public getQuantity (id: string): number {
-        return this.products[id] != null ? this.products[id] : 0;
+        if(this.products.size > 0)
+            return this.products[id] ? this.products[id] : 0;
+        return 0;
     }
 
     public isEmpty (): boolean {
@@ -44,6 +46,8 @@ export class Cart {
     }
 
     public contains (id: string): boolean {
-        return this.products[id] != null && this.products[id] > 0;
+        if(this.products.size > 0)
+            return this.products[id] && this.products[id] > 0;
+        return false;
     }
 }

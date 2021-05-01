@@ -28,10 +28,16 @@ export class Model {
         const CART: Cart = await this.persistence.getItem(ID);
 
         if(!CART){
-            if(isGuest) return new Cart(this.generateGuestId());
-                else return new Cart(ID); 
-        } 
-        else return CART;
+            if(isGuest) {
+                const NEW_GUEST_CART = new Cart(this.generateGuestId());
+                this.persistence.updateCart(NEW_GUEST_CART);
+                return NEW_GUEST_CART;
+            }
+            const NEW_USER_CART = new Cart(ID);
+            this.persistence.updateCart(NEW_USER_CART);
+            return NEW_USER_CART;
+        }
+        return CART;
     }
 
     public static createModel (): Model {
@@ -96,13 +102,13 @@ export class Model {
 
         const CART: Cart = await this.getCartFromPersistence(token, isGuest);
 
-            console.log("Updating cart");
-            const AVAILABLE: boolean = await this.productsService.checkQuantity(productId,
-                quantity+CART.getQuantity(productId));
-            if(!AVAILABLE)
-                return false;
-            CART.addToCart(productId, quantity);
-            return this.persistence.updateCart(CART);
+        console.log("addToCart ");
+        const AVAILABLE: boolean = await this.productsService.checkQuantity(productId,
+            quantity + CART.getQuantity(productId));
+        if(!AVAILABLE)
+            return false;
+        CART.addToCart(productId, quantity);
+        return this.persistence.updateCart(CART);
         
     }
 
@@ -161,6 +167,6 @@ export class Model {
     }
 
     private generateGuestId (): string {
-        return "guest_"+uuidv4();
+        return "guest_" + uuidv4();
     }
 }

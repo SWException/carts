@@ -15,7 +15,6 @@ test('schema', () => {
     expect(CART_SCHEMA).toBeValidSchema();
 });
 
-
 test('getCart', async () => {
     const RES = await MODEL.getCart("1", false);
     expect(RES.cart).toMatchSchema(CART_SCHEMA);
@@ -30,9 +29,7 @@ test('getCart guest', async () => {
     expect(RES4.cart).toMatchSchema(CART_SCHEMA);
     const RES5 = await MODEL.getCart("1", true);
     expect(RES5.cart).toMatchSchema(CART_SCHEMA);
-    
 });
-
 
 test('getCart with error stock', async () => {
     const RES = await MODEL.getCart("1", false);
@@ -45,7 +42,6 @@ test("addToCart", async () => {
     res = await MODEL.addToCart("1", "test_product", 20, false);
     expect(res).toBe(false);
     await expect(MODEL.addToCart(null, "1", 2, false)).rejects.toThrow(Error);
-
 });
 
 test('updateToCart', async()=>{
@@ -73,7 +69,6 @@ test("authCart", async () => {
     const RES = await MODEL.authCart("1", "guest_1");
     expect(RES).toBe(true);
 });
-
 
 test("error deleteCart", async () => {
     await expect(MODEL.deleteCart(null, false)).rejects.toThrow(Error);
