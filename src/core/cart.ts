@@ -8,19 +8,20 @@ export class Cart {
     }
 
     public addToCart (productId: string, quantity: number): void{
-        if(this.products[productId] == null)
-            this.products[productId] = 0;
-        this.products[productId] += quantity;
+        if(this.products.get(productId) == null)
+            this.products.set(productId,0);
+        const QTA = this.products.get(productId);
+        this.products.set(productId, quantity+QTA);
     }
 
     public updateCart (productId: string, quantity: number): void{
-        if(this.products[productId] == null){
+        if(this.products.get(productId) == null){
             console.log("updateCart. Ehi product null");
             return;
         }
         console.log("aggiorno quantità", quantity);
         
-        this.products[productId] = quantity;
+        this.products.set(productId, quantity);
     }
 
     public removeFromCart (productId: string): void {
@@ -37,9 +38,9 @@ export class Cart {
 
     public getQuantity (id: string): number {
         if(this.products.size > 0)
-            return this.products[id] ? this.products[id] : 0;
+            return this.products.get(id) ? this.products.get(id) : 0;
         return 0;
-    }
+    }                                                                                                                         
 
     public isEmpty (): boolean {
         return this.products.size == 0;
@@ -47,7 +48,8 @@ export class Cart {
 
     public contains (id: string): boolean {
         if(this.products.size > 0)
-            return this.products[id] && this.products[id] > 0;
+            return this.products.get(id) > 0;
+    
         return false;
     }
 }

@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Serverless aws-nodejs-typescript template",
   "scripts": {
-    "test": "jest --silent --collect-coverage",
+    "test": "jest --collect-coverage",
     "lint": "eslint . --ext .ts",
     "lint-and-fix": "eslint . --ext .ts --fix",
     "build-openapi": "swagger-cli bundle openapi.yml --outfile _build/openapi.yml --type yaml"

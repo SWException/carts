@@ -145,10 +145,12 @@ export class Model {
         const PRODUCTS: Map<string, number> = CART_GUEST.getProducts();
         const USERNAME: string = await this.tokenToID(customerToken);
         const CART_CUSTOMER: Cart = await this.persistence.getItem(USERNAME);
+        console.log(CART_CUSTOMER);
         if(CART_CUSTOMER) { // merge con un eventuale carrello già presente per quell'utente
             const PRODUCTS_CUSTOMER: Map<string, number> = CART_CUSTOMER.getProducts();
-            Object.keys(PRODUCTS_CUSTOMER).forEach(key => {
-                const TMP: number = (PRODUCTS[key] ? PRODUCTS[key] : 0) + PRODUCTS_CUSTOMER[key];
+            const KEYS = Array.from(PRODUCTS_CUSTOMER.keys());
+            KEYS.forEach(key => {
+                const TMP: number = (PRODUCTS.get(key) ? PRODUCTS.get(key) : 0) + PRODUCTS_CUSTOMER.get(key);
                 PRODUCTS.set(key, TMP);
             });
         }
