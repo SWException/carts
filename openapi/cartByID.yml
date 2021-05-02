@@ -75,7 +75,7 @@ patch:
           $ref: "../schemas/carts.json#/insertCartProduct"
         example:
           {
-            productId: "1234",
+            id: "1234",
             quantity: 2
           }
   responses:

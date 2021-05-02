@@ -106,7 +106,7 @@ export class Model {
         const AVAILABLE: boolean = await this.productsService.checkQuantity(productId,
             quantity + CART.getQuantity(productId));
         if(!AVAILABLE)
-            return false;
+            throw new Error("Not enough quantity available");
         CART.addToCart(productId, quantity);
         return this.persistence.updateCart(CART);
         
@@ -121,7 +121,7 @@ export class Model {
         
         const AVAILABLE: boolean = await this.productsService.checkQuantity(productId, quantity);
         if(!AVAILABLE)
-            return false;
+            throw new Error("Not enough quantity available");
 
         console.log("Updating cart in updateCart");
         CART.updateCart(productId, quantity); // Questa è una riga diversa da add to cart

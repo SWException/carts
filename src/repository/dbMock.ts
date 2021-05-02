@@ -16,8 +16,8 @@ export class DbMock implements Persistence {
             
             return new Cart("guest_1", CART_FAKE);
         }
-           else  return null;
-
+        else  
+            return null;
 
     }
     public async deleteCart (id: string): Promise<boolean> {

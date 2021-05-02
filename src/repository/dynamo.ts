@@ -21,7 +21,7 @@ export class Dynamo implements Persistence {
         const PROD: Map<string, number> = new Map<string, number>();
         
         DATA.Item?.products?.forEach(product => {
-            PROD.set(product.productId, product.quantity);
+            PROD.set(product.id, product.quantity);
         });
 
         return DATA.Item ? new Cart(DATA.Item.id, PROD) : null;
@@ -40,8 +40,9 @@ export class Dynamo implements Persistence {
         const RESP = await this.DOCUMENT_CLIENT.delete(PARAMS).promise();
         if (!RESP.Attributes) {
             throw new Error('Cannot delete item that does not exist')
-          }
-            else return true;     
+        }
+        else 
+            return true;     
     }
 
     public async updateCart (cart: Cart): Promise<boolean> {
@@ -57,7 +58,7 @@ export class Dynamo implements Persistence {
             console.log("forEach PRODUCTS. Current key: ", key);
             
             VALUE.push({
-                "productId": key,
+                "id": key,
                 "quantity": PRODUCTS.get(key)
             });
         });

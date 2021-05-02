@@ -1,5 +1,5 @@
 export class Product{
-    private readonly productId: string;
+    private readonly id: string;
     private readonly name: string;
     private readonly primaryPhoto: string;
     private readonly price: number;
@@ -7,9 +7,9 @@ export class Product{
     private readonly quantity: number;
     private readonly total: number;
 
-    constructor (productId: string, name: string, primaryPhoto: string, 
+    constructor (id: string, name: string, primaryPhoto: string, 
         price: number, tax: number, quantity: number) {
-        this.productId = productId;
+        this.id = id;
         this.name = name;
         this.primaryPhoto = primaryPhoto;
         this.price = price;
@@ -20,7 +20,7 @@ export class Product{
 
     //metodi mai usati ma creati solo per evitare errore di mancato utilizzo dato
     public getId (): string {
-        return this.productId;
+        return this.id;
     }
 
     public getName (): string {
