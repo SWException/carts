@@ -155,7 +155,7 @@ export class Model {
         });
         
         const CART_NEW = new Cart(USERNAME, PRODUCTS);
-        const DELETE: boolean = await this.persistence.deleteCart(guestToken);
+        const DELETE: boolean = await this.persistence.deleteCart(guestToken).catch(()=>false);
         if(!DELETE)
             return false;
         return await this.persistence.updateCart(CART_NEW);

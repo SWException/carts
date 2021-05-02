@@ -32,13 +32,16 @@ export class Dynamo implements Persistence {
             Key: {
                 id: userid
             },
-            TableName: Dynamo.TABLE_CARTS
+            TableName: Dynamo.TABLE_CARTS,
+            ReturnValues: 'ALL_OLD',
         };
 
-        await this.DOCUMENT_CLIENT.delete(PARAMS).promise().catch(
-            () => { return false; }
-        );
-        return true;     
+        
+        const RESP = await this.DOCUMENT_CLIENT.delete(PARAMS).promise();
+        if (!RESP.Attributes) {
+            throw new Error('Cannot delete item that does not exist')
+          }
+            else return true;     
     }
 
     public async updateCart (cart: Cart): Promise<boolean> {
