@@ -24,6 +24,9 @@ export class Model {
     }
 
     private async getCartFromPersistence (token: string, isGuest: boolean): Promise<Cart>{
+        if(token == null && !isGuest)
+            throw new Error("invalid token");
+        
         const ID: string = isGuest ? token : await this.tokenToID(token);
         const CART: Cart = await this.persistence.getItem(ID);
 

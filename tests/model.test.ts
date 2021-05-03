@@ -27,13 +27,11 @@ test('getCart', async () => {
     expect(RES3.cart).toMatchSchema(CART_SCHEMA);
 });
 
-
 test('getCart qta non disponibile', async () => {
     const RES = await MODEL.getCart("guest_1", false);
     expect(RES.cart).toMatchSchema(CART_SCHEMA);
    
 });
-
 
 test('test real Model', async () => {
     const MODEL = Model.createModel();
@@ -53,22 +51,31 @@ test('getCart with error stock', async () => {
 });
 
 test("addToCart", async () => {
-    let res = await MODEL.addToCart("1", "test_product", 1, false);
-    expect(res).toBe(true);
-    res = await MODEL.addToCart("1", "test_product", 20, false);
-    expect(res).toBe(false);
-    await expect(MODEL.addToCart(null, "1", 2, false)).rejects.toThrow(Error);
-});
-
-test('updateToCart', async()=>{
-    const RES = await MODEL.updateCart("1","1",2,false);
+    const RES = await MODEL.addToCart("1", "test_product", 1, false);
     expect(RES).toBe(true);
 });
 
-test('updateToCart error', async()=>{
-    await MODEL.updateCart("1","test_product",50,false);
-    const RES = await MODEL.getCart("1", false);
-    expect(RES.cart).toMatchSchema(CART_SCHEMA);
+test("addToCart no stock", async () => {
+    await expect(MODEL.addToCart("1", "test_product", 20, false))
+        .rejects
+        .toThrowError();
+});
+
+test("addToCart no cart ID", async () => {
+    await expect(MODEL.addToCart(null, "1", 2, false))
+        .rejects
+        .toThrowError();
+});
+
+test('updateCart', async ()=>{
+    const RES = await MODEL.updateCart("1","test_product",2,false);
+    expect(RES).toBe(true);
+});
+
+test('updateCart error', async ()=>{
+    await expect(MODEL.updateCart("1","test_product",50,false))
+        .rejects
+        .toThrowError();
 });
 
 test("deleteCart", async () => {

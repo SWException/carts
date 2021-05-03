@@ -54,12 +54,14 @@ export class ProductsMock implements Products {
         return null;
     }
 
-    public async checkQuantity (_id: string, _quantity: number): Promise<boolean> {
-        if(_id = "test_product")
-            if (ProductsMock.PRODUCT.stock >= _quantity) return true;
-        else 
-             if (ProductsMock.PRODUCT2.stock >= _quantity) return true;
-             
-        else return false;
+    public async checkQuantity (id: string, quantity: number): Promise<boolean> {
+        if(id == "test_product")
+            if (ProductsMock.PRODUCT.stock >= quantity) 
+                return true;
+            else 
+            if (ProductsMock.PRODUCT2.stock >= quantity) 
+                return true;
+            else
+                return false;
     }
 }
