@@ -37,8 +37,19 @@ export class CartWithDetails {
     
     public addProduct (product: Product): void{
         this.itemCount += product.getQuantity();
-        this.total += product.getTotalPrice();
-        this.tax += product.getTotalPrice() * product.getTax()/100;
+        this.total += CartWithDetails.precisionRound(product.getTotalPrice(), 2);
+        this.tax += 
+            CartWithDetails.precisionRound(product.getTotalPrice() * product.getTax()/100, 2);
         this.products.push(product);
+    }
+
+    private static precisionRound (number: number, precision: number): number {
+        if (precision < 0) {
+            const FACTOR = Math.pow(10, precision);
+            return Math.round(number * FACTOR) / FACTOR;
+        }
+        else
+            return +(Math.round(Number(number + "e+" + precision)) +
+            "e-" + precision);
     }
 }
