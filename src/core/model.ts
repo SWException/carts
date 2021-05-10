@@ -28,7 +28,8 @@ export class Model {
             throw new Error("invalid token");
         
         const ID: string = isGuest ? token : await this.tokenToID(token);
-        const CART: Cart = await this.persistence.getItem(ID);
+        const CART: Cart = await this.persistence.getItem(ID)
+            .catch((err: Error) => null);
 
         if(!CART){
             if(isGuest) {
