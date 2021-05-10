@@ -39,10 +39,8 @@ test('test real Model', async () => {
 });
 
 test('getCart guest', async () => {
-    const RES4 = await MODEL.getCart(null, true);
-    expect(RES4.cart).toMatchSchema(CART_SCHEMA);
-    const RES5 = await MODEL.getCart("1", true);
-    expect(RES5.cart).toMatchSchema(CART_SCHEMA);
+    const RES = await MODEL.getCart("1", true);
+    expect(RES.cart).toMatchSchema(CART_SCHEMA);
 });
 
 test('getCart with error stock', async () => {
