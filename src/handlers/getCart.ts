@@ -15,7 +15,17 @@ export const HANDLER: APIGatewayProxyHandler = async (event) => {
     
     const MODEL: Model = Model.createModel();
     return await MODEL.getCart(token, isGuest)
+        .then((result: {cart: CartWithDetails, modified: boolean}) => {
+            console.log("carrello ritornato con id: " + result.cart.getId());
+            return response(200, (result.modified ? "something is missing":"success"), result.cart);
+        })
+        .catch((err: Error) =>{ 
+            console.log("errore: "+ err.message);
+            return response(400, err.message);
+        });
+
+    /*return await MODEL.getCart(token, isGuest)
         .then((result: {cart: CartWithDetails, modified: boolean}) => 
             response(200, (result.modified ? "something is missing":"success"), result.cart))
-        .catch((err: Error) =>  response(400, err.message));
+        .catch((err: Error) =>  response(400, err.message));*/
 }
