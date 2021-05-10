@@ -103,6 +103,8 @@ export class Model {
     public async addToCart (token: string, productId: string, quantity: number,
         isGuest: boolean): Promise<boolean> {
 
+        if(!token)  // fix: cart generava guest cart nuovo senza ritornarne l'id
+            return false;
         const CART: Cart = await this.getCartFromPersistence(token, isGuest);
 
         console.log("addToCart ");
