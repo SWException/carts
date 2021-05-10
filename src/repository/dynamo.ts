@@ -17,7 +17,7 @@ export class Dynamo implements Persistence {
 
         const DATA = await this.DOCUMENT_CLIENT.get(PARAMS).promise();
         console.log("getItem Dynamo: ", JSON.stringify(DATA.Item));
-
+        
         const PROD: Map<string, number> = new Map<string, number>();
         
         DATA.Item?.products?.forEach(product => {

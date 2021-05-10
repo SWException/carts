@@ -50,6 +50,11 @@ test('getCart with error stock', async () => {
     expect(RES.cart).toMatchSchema(CART_SCHEMA);
 });
 
+test('getCart no token no guestId', async () => {
+    const RES = await MODEL.getCart(null, true);
+    expect(RES.cart).toMatchSchema(CART_SCHEMA);
+});
+
 test("addToCart", async () => {
     const RES = await MODEL.addToCart("1", "test_product", 1, false);
     expect(RES).toBe(true);
