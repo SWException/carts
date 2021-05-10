@@ -154,7 +154,7 @@ export class Model {
         const CART_GUEST: Cart = await this.getCartFromPersistence(guestToken, true);
         const PRODUCTS: Map<string, number> = CART_GUEST.getProducts();
         const USERNAME: string = await this.tokenToID(customerToken);
-        const CART_CUSTOMER: Cart = await this.getCartFromPersistence(USERNAME, false);
+        const CART_CUSTOMER: Cart = await this.getCartFromPersistence(customerToken, false);
  
         const PRODUCTS_CUSTOMER: Map<string, number> = CART_CUSTOMER.getProducts();
         const KEYS = Array.from(PRODUCTS_CUSTOMER.keys());
