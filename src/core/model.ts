@@ -29,7 +29,10 @@ export class Model {
         
         const ID: string = isGuest ? token : await this.tokenToID(token);
         const CART: Cart = await this.persistence.getItem(ID)
-            .catch((err: Error) => null);
+            .catch((err: Error) => {
+                console.log("error thrown in getItem: " + err.message);
+                return null;
+            });
 
         if(!CART){
             if(isGuest) {
