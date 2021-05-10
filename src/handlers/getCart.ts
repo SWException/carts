@@ -10,6 +10,9 @@ export const HANDLER: APIGatewayProxyHandler = async (event) => {
         token = event.headers?.guestToken;
         isGuest = true;
     }
+    console.log("token auth: "+event.headers?.Authorization);
+    console.log("token guest: "+event.headers?.guestToken);
+    
     const MODEL: Model = Model.createModel();
     return await MODEL.getCart(token, isGuest)
         .then((result: {cart: CartWithDetails, modified: boolean}) => 
