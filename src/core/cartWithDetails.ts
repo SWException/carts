@@ -40,6 +40,8 @@ export class CartWithDetails {
         this.total += CartWithDetails.precisionRound(product.getTotalPrice(), 2);
         this.tax += 
             CartWithDetails.precisionRound(product.getTotalPrice() * product.getTax()/100, 2);
+        this.total = CartWithDetails.precisionRound(this.total, 2);
+        this.tax = CartWithDetails.precisionRound(this.tax, 2);
         this.products.push(product);
     }
 
@@ -48,8 +50,9 @@ export class CartWithDetails {
             const FACTOR = Math.pow(10, precision);
             return Math.round(number * FACTOR) / FACTOR;
         }
-        else
+        else{
             return +(Math.round(Number(number + "e+" + precision)) +
             "e-" + precision);
+        }
     }
 }
