@@ -11,7 +11,7 @@ get:
       schema:
         type: string
       required: false
-    - in: header
+    - in: query
       name: guestToken
       schema:
         type: string
@@ -64,7 +64,7 @@ delete:
       schema:
         type: string
       required: false
-    - in: header
+    - in: query
       name: guestToken
       schema:
         type: string
@@ -100,7 +100,7 @@ post:
       schema:
         type: string
       required: false
-    - in: header
+    - in: query
       name: guestToken
       schema:
         type: string
@@ -150,7 +150,7 @@ patch:
       schema:
         type: string
       required: true
-    - in: header
+    - in: query
       name: guestToken
       schema:
         type: string

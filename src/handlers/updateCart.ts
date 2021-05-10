@@ -6,7 +6,7 @@ export const HANDLER: APIGatewayProxyHandler = async (event) => {
     let token: string = event.headers?.Authorization;
     let isGuest = false;
     if(token == null) {
-        token = event.headers?.guestToken;
+        token = event.queryStringParameters?.guestToken;
         isGuest = true;
     }
     const BODY = JSON.parse(event.body);

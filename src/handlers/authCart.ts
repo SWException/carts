@@ -4,7 +4,7 @@ import { Model } from "../core/model";
 
 export const HANDLER: APIGatewayProxyHandler = async (event) => {
     const CUSTOMER_TOKEN: string = event.headers?.Authorization;
-    const GUEST_TOKEN: string = event.headers?.guestToken
+    const GUEST_TOKEN: string = event.queryStringParameters?.guestToken;
     if(CUSTOMER_TOKEN == null || GUEST_TOKEN == null)
         response(400, "bad request");
     const MODEL: Model = Model.createModel();
