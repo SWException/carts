@@ -1,6 +1,6 @@
 get:
-  summary: Ritorna il carrello
-  description: Ritorna i prodotti e i dettagli contabili del carrello utente
+  summary: Get the cart
+  description: Get products and accounting details of the current cart
   operationId: getCart
   tags:
     - cart
@@ -11,14 +11,14 @@ get:
       schema:
         type: string
       required: false
-    - in: header
+    - in: query
       name: guestToken
       schema:
         type: string
       required: false
   responses:
     200:
-      description: il carrello è stato ritornato
+      description: cart returned
       content:
         application/json:
           schema:
@@ -44,7 +44,7 @@ get:
                 },
             }
     400:
-      description: carrello non trovato
+      description: cart didn't found
       content:
         application/json:
           schema:
@@ -52,8 +52,8 @@ get:
           example: { status: "error", message: "carrello non trovato" }
 
 delete:
-  summary: Elimina il carrello
-  description: Elimina i prodotti e i dettagli contabili del carrello utente
+  summary: Delete the cart
+  description: Empty the cart associated with the user authenticated
   operationId: deleteCart
   tags:
     - cart
@@ -64,14 +64,14 @@ delete:
       schema:
         type: string
       required: false
-    - in: header
+    - in: query
       name: guestToken
       schema:
         type: string
       required: false
   responses:
     200:
-      description: il carrello è stato eliminato
+      description: cart was deleted
       content:
         application/json:
           schema:
@@ -79,10 +79,99 @@ delete:
           example:
             { status: "success", message: "carrello eliminato" }
     400:
-      description: carrello non trovato
+      description: cart didn't found
       content:
         application/json:
           schema:
             $ref: "../schemas/response.json#/response"
           example: { status: "error", message: "impossibile eliminare il carrello di questo utente" }
 
+#api per aggiungere e rimuovere un prodotto dal carrello
+post:
+  summary: Add a product to cart
+  description: Receive a product ID and a quantity, iff se quantity is available in stock the operation is successful
+  operationId: addToCart
+  tags:
+    - cart
+  parameters:
+    - in: header
+      name: Authorization
+      description: token JWT
+      schema:
+        type: string
+      required: false
+    - in: query
+      name: guestToken
+      schema:
+        type: string
+      required: false
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: "../schemas/carts.json#/insertCartProduct"
+        example:
+          {
+            id: "1234",
+            quantity: 2
+          }
+  responses:
+    200:
+      description: "product added to cart"
+      content:
+        application/json:
+          schema:
+            $ref: "../schemas/response.json#/response"
+          example:
+            { status: "success", message: "articolo aggiunto al carrello" }
+    400:
+      description: product not added to cart"
+      content:
+        application/json:
+          schema:
+            $ref: "../schemas/response.json#/response"
+          example:
+            {
+              status: "error",
+              message: "errore o l'articolo non era presente nella quantità richiesta",
+            }
+
+patch:
+  summary: "authenticate cart"
+  description: "pass a guest cart to an authenticated cart"
+  operationId: "authCart"
+  tags:
+    - cart
+  parameters:
+    - in: header
+      name: Authorization
+      description: token JWT
+      schema:
+        type: string
+      required: true
+    - in: query
+      name: guestToken
+      schema:
+        type: string
+      required: true
+  responses:
+    200:
+      description: "cart authenticated"
+      content:
+        application/json:
+          schema:
+            $ref: "../schemas/response.json#/response"
+          example:
+            { status: "success", message: "success" }
+    400:
+      description: product not added to cart"
+      content:
+        application/json:
+          schema:
+            $ref: "../schemas/response.json#/response"
+          example:
+            {
+              status: "error",
+              message: "failure",
+            }

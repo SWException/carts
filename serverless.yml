@@ -37,6 +37,7 @@ provider:
   environment:
     AWS_NODEJS_CONNECTION_REUSE_ENABLED: "1"
     REGION: ${self:provider.region}
+    SERVICES: ${env:SERVICES}
 
   iam:
     role:
@@ -49,19 +50,47 @@ provider:
 
 functions:
   getCart:
-    handler: "src/cart/getCart.HANDLER"
+    handler: "src/handlers/getCart.HANDLER"
     events:
       - http:
           path: /cart
           method: GET
           cors: true
-  postCart:
-    handler: "src/cart/postCart.HANDLER"
+  deleteCart:
+    handler: "src/handlers/deleteCart.HANDLER"
     events:
       - http:
-          path: /cart
+          path: /cart/
+          method: DELETE
+          cors: true
+  addToCart:
+    handler: "src/handlers/addToCart.HANDLER"
+    events:
+      - http:
+          path: /cart/
           method: POST
-          cors: true   
+          cors: true
+  updateCart:
+    handler: "src/handlers/updateCart.HANDLER"
+    events:
+      - http:
+          path: /cart/product/{id}
+          method: PATCH
+          cors: true
+  removeFromCart:
+    handler: "src/handlers/removeFromCart.HANDLER"
+    events:
+      - http:
+          path: /cart/product/{id}
+          method: DELETE
+          cors: true
+  authCart:
+    handler: "src/handlers/authCart.HANDLER"
+    events:
+      - http:
+          path: /cart/
+          method: PATCH
+          cors: true
 
 resources:
   Resources:

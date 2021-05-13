@@ -1,59 +1,6 @@
-#api per aggiungere e rimuovere un prodotto dal carrello
-post:
-  summary: Aggiunta prodotto al carrello
-  description: Riceve id prodotto e quantità, se disponibile inserisce nel carrello
-  operationId: addToCart
-  tags:
-    - cart
-  parameters:
-    - in: header
-      name: Authorization
-      description: token JWT
-      schema:
-        type: string
-      required: false
-    - in: header
-      name: guestToken
-      schema:
-        type: string
-      required: false
-    - in: path
-      name: id
-      description: id del prodotto da aggiungere
-      schema:
-        type: string
-      required: true
-  requestBody:
-    required: true
-    content:
-      application/json:
-        schema:
-          $ref: "../schemas/carts.json#/insertCartProduct"
-        example: { id: "123VF", quantity: 3 }
-  responses:
-    200:
-      description: "articolo aggiunto al carrello"
-      content:
-        application/json:
-          schema:
-            $ref: "../schemas/response.json#/response"
-          example:
-            { status: "success", message: "articolo aggiunto al carrello" }
-    400:
-      description: "articolo non aggiunto al carrello"
-      content:
-        application/json:
-          schema:
-            $ref: "../schemas/response.json#/response"
-          example:
-            {
-              status: "error",
-              message: "errore o l'articolo non era presente nella quantità richiesta",
-            }
-
 delete: 
-  summary: Rimozione prodotto
-  description: Rimuove il prodotto dal carrello con l'id passato come parametro
+  summary: Remove the product
+  description: Remove the product with the specified ID from the cart
   operationId: removeFromCart
   tags:
     - cart
@@ -64,7 +11,7 @@ delete:
       schema:
         type: string
       required: false
-    - in: header
+    - in: query
       name: guestToken
       schema:
         type: string
@@ -77,7 +24,7 @@ delete:
       required: true
   responses:
     200:
-      description: "articolo rimosso dal carrello"
+      description: "Product removed from cart"
       content:
         application/json:
           schema:
@@ -85,7 +32,7 @@ delete:
           example:
             { status: "success", message: "articolo rimosso con successo" }
     400:
-      description: "l'articolo non era presente nel carrello"
+      description: "The product wasn't in the cart"
       content:
         application/json:
           schema:
@@ -95,3 +42,60 @@ delete:
               status: "error",
               message: "l'articolo non era presente nel carrello",
             }
+
+patch:
+  summary: Modify product in the cart
+  description: Change the quantity of the product in the cart
+  operationId: changeQuantity
+  tags:
+    - cart
+  parameters:
+    - in: header
+      name: Authorization
+      description: token JWT
+      schema:
+        type: string
+      required: false
+    - in: query
+      name: guestToken
+      schema:
+        type: string
+      required: false
+    - in: path
+      name: id
+      description: id del prodotto da modificare
+      schema:
+        type: string
+      required: true
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: "../schemas/carts.json#/insertCartProduct"
+        example:
+          {
+            id: "1234",
+            quantity: 2
+          }
+  responses:
+    200:
+      description: "quantity modified"
+      content:
+        application/json:
+          schema:
+            $ref: "../schemas/response.json#/response"
+          example:
+            { status: "success", message: "quantity modified" }
+    400:
+      description: "request error"
+      content:
+        application/json:
+          schema:
+            $ref: "../schemas/response.json#/response"
+          example:
+            {
+              status: "error",
+              message: "request error",
+            }
+  

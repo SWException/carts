@@ -16,5 +16,6 @@
         ".serverless/": true,
         "node_modules/": true,
         ".dynamodb/": true,
-    }
+    },
+    "eslint.format.enable": true
 }

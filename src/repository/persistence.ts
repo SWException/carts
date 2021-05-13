@@ -1,9 +1,8 @@
-import { Cart } from "src/core/cart"
+import { Cart } from "../core/cart";
 
 export interface Persistence {
-    getAll(): Promise<Array<Cart>>;
-    getItem(id: string): Promise<Cart>;
-    addItem(item: Tax): Promise<boolean>;
-    editItem(item: Tax): Promise<boolean>;
-    deleteItem(id: string): Promise<boolean>;
+    getItem (id: string): Promise<Cart>;
+    deleteCart (id: string): Promise<boolean>;
+    updateCart (cart: Cart): Promise<boolean>;
+
 }
